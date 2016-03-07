@@ -12,10 +12,12 @@ class DateTimeHelper
     {
         if($timestamp === null) {
             return null;
-        } else {
+        } elseif(is_int($timestamp)) {
             $dt = new \DateTime();
             $dt->setTimestamp($timestamp);
             return $dt;
+        } else {
+            throw new \InvalidArgumentException('expected integer or null');
         }
     }
 }
