@@ -34,6 +34,17 @@ class Image
     }
 
     /**
+     * @param float $angle
+     * @return void
+     */
+    public function rotate($angle)
+    {
+        $resource = imagerotate($this->resource, $angle, 0);
+        imagedestroy($this->resource);
+        $this->resource = $resource;
+    }
+
+    /**
      * @param string $path
      * @return void
      */
