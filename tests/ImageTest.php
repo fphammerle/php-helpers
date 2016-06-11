@@ -27,6 +27,46 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         unlink($tmp_path);
     }
 
+    public function rotateLeftProvider()
+    {
+        return [
+            [__DIR__ . '/data/chainring.jpg', __DIR__ . '/data/chainring-rotated-left.jpg'],
+            ];
+    }
+
+    /**
+     * @dataProvider rotateLeftProvider
+     */
+    public function testRotateLeft($source_path, $expected_path)
+    {
+        $img = Image::fromFile($source_path);
+        $tmp_path = tempnam(sys_get_temp_dir(), 'image');
+        $img->rotateLeft();
+        $img->saveJpeg($tmp_path);
+        $this->assertFileEquals($expected_path, $tmp_path);
+        unlink($tmp_path);
+    }
+
+    public function rotateRightProvider()
+    {
+        return [
+            [__DIR__ . '/data/chainring.jpg', __DIR__ . '/data/chainring-rotated-right.jpg'],
+            ];
+    }
+
+    /**
+     * @dataProvider rotateRightProvider
+     */
+    public function testRotateRight($source_path, $expected_path)
+    {
+        $img = Image::fromFile($source_path);
+        $tmp_path = tempnam(sys_get_temp_dir(), 'image');
+        $img->rotateRight();
+        $img->saveJpeg($tmp_path);
+        $this->assertFileEquals($expected_path, $tmp_path);
+        unlink($tmp_path);
+    }
+
     public function testSaveJpeg()
     {
         $img = Image::fromFile(__DIR__ . '/data/chainring.jpg');

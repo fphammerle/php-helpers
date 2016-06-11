@@ -45,6 +45,22 @@ class Image
     }
 
     /**
+     * @return void
+     */
+    public function rotateLeft()
+    {
+        $this->rotate(90);
+    }
+
+    /**
+     * @return void
+     */
+    public function rotateRight()
+    {
+        $this->rotate(270);
+    }
+
+    /**
      * @param string $path
      * @return void
      */
