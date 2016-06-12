@@ -83,6 +83,11 @@ class PathTest extends \PHPUnit_Framework_TestCase
     public function dirPathProvider()
     {
         return [
+            ['/', '/'],
+            ['/dir', '/dir'],
+            ['/dir/subdir', '/dir/subdir'],
+            ['dir', 'dir'],
+            ['dir/subdir', 'dir/subdir'],
             [null, null],
             ];
     }
@@ -94,7 +99,11 @@ class PathTest extends \PHPUnit_Framework_TestCase
     {
         $p = new Path;
         $p->dirPath = $input_dir_path;
-        $this->assertSame($expected_dir_path, $p->dirPath);
+        if(isset($input_dir_path)) {
+            $this->assertSame($expected_dir_path, $p->dirPath->path);
+        } else {
+            $this->assertNull($p->dirPath);
+        }
     }
 
     public function extensionProvider()
