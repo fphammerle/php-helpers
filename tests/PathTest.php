@@ -21,6 +21,18 @@ class PathTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected_extension, $p->extension);
     }
 
+    /**
+     * @dataProvider pathProvider
+     */
+    public function testToString($expected_path, $dir_path, $filename, $extension)
+    {
+        $p = new Path;
+        $p->dirPath = $dir_path;
+        $p->filename = $filename;
+        $p->extension = $extension;
+        $this->assertSame($expected_path ?: '', (string)$p);
+    }
+
     public function getBasenameProvider()
     {
         return [

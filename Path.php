@@ -19,9 +19,20 @@ class Path
      */
     protected $_extension;
 
+    /**
+     * @param string|null $path
+     */
     public function __construct($path = null)
     {
         $this->setPath($path);
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->path ?: '';
     }
 
     /**
