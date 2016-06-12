@@ -31,4 +31,14 @@ trait PropertyAccessTrait
             $this->$setter_name($value);
         }
     }
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        $getter_name = 'get' . $name;
+        return method_exists($this, $getter_name) && ($this->$getter_name() !== null);
+    }
 }

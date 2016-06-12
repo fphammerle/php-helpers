@@ -61,7 +61,7 @@ class StringHelper
         if(sizeof($pieces) == 0) {
             return null;
         } else {
-            return implode($glue, array_filter($pieces));
+            return implode($glue, $pieces);
         }
     }
 }

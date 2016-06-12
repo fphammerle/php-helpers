@@ -79,4 +79,43 @@ class PropertyAccessTraitTest extends \PHPUnit_Framework_TestCase
         $o = new TestClass(1);
         $o->square = 4;
     }
+
+    public function testIncrement()
+    {
+        $o = new TestClass(1);
+        $o->a++;
+        $this->assertEquals(2, $o->getA());
+    }
+
+    public function testAdd()
+    {
+        $o = new TestClass(1);
+        $o->a += 3;
+        $this->assertEquals(4, $o->getA());
+    }
+
+    public function testIssetTrue()
+    {
+        $o = new TestClass(2);
+        $this->assertTrue(isset($o->a));
+    }
+
+    public function testIssetEmpty()
+    {
+        $o = new TestClass('');
+        $this->assertEquals('', $o->a);
+        $this->assertTrue(isset($o->a));
+    }
+
+    public function testIssetNull()
+    {
+        $o = new TestClass(null);
+        $this->assertFalse(isset($o->a));
+    }
+
+    public function testIssetUndefined()
+    {
+        $o = new TestClass(null);
+        $this->assertFalse(isset($o->b));
+    }
 }
