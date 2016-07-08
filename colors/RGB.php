@@ -67,4 +67,17 @@ class RGB
             && abs($this->green - $other->green) < self::comparison_precision
             && abs($this->blue  - $other->blue)  < self::comparison_precision;
     }
+
+    public function getTuple()
+    {
+        return [$this->red, $this->green, $this->blue];
+    }
+
+    public function getDigitalTuple($bits)
+    {
+        $bits = (int)$bits;
+        $factor = (2 << ($bits - 1)) - 1;
+        $tuple = $this->tuple;
+        return array_map(function($v) use ($factor) { return (int)round($v * $factor); }, $tuple);
+    }
 }

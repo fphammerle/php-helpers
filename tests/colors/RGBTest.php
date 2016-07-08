@@ -221,4 +221,50 @@ class RGBTest extends \PHPUnit_Framework_TestCase
         $c->blue = $s;
         $this->assertEquals($g, $c->blue, '', self::comparison_precision);
     }
+
+    public function getTupleProvider()
+    {
+        return [
+            [new RGB(0.0, 0.0, 0.0), [0.0, 0.0, 0.0]],
+            [new RGB(0.2, 0.3, 0.4), [0.2, 0.3, 0.4]],
+            [new RGB(0.8, 0.9, 1.0), [0.8, 0.9, 1.0]],
+            [new RGB(1/7, 1/9, 1/3), [1/7, 1/9, 1/3]],
+            ];
+    }
+
+    /**
+     * @dataProvider getTupleProvider
+     */
+    public function testGetTuple($c, $h)
+    {
+        $this->assertEquals($h, $c->tuple,      '', self::comparison_precision);
+        $this->assertEquals($h, $c->getTuple(), '', self::comparison_precision);
+    }
+
+    public function getDigitalTupleProvider()
+    {
+        return [
+            [new RGB(0.0, 0.0, 0.0), 1, [0, 0, 0]],
+            [new RGB(0.0, 0.0, 0.0), 2, [0, 0, 0]],
+            [new RGB(0.0, 0.0, 0.0), 3, [0, 0, 0]],
+            [new RGB(0.2, 0.3, 0.4), 1, [0, 0, 0]],
+            [new RGB(0.2, 0.3, 0.4), 2, [1, 1, 1]],
+            [new RGB(0.2, 0.3, 0.4), 3, [1, 2, 3]],
+            [new RGB(0.8, 0.9, 1.0), 1, [1, 1, 1]],
+            [new RGB(0.8, 0.9, 1.0), 2, [2, 3, 3]],
+            [new RGB(0.8, 0.9, 1.0), 3, [6, 6, 7]],
+            [new RGB(1/7, 1/9, 1/3), 1, [0, 0, 0]],
+            [new RGB(1/7, 1/9, 1/3), 2, [0, 0, 1]],
+            [new RGB(1/7, 1/9, 1/3), 3, [1, 1, 2]],
+            [new RGB(1/8, 1/4, 1/2), 3, [1, 2, 4]],
+            ];
+    }
+
+    /**
+     * @dataProvider getDigitalTupleProvider
+     */
+    public function testGetDigitalTuple($c, $bits, $tuple)
+    {
+        $this->assertSame($tuple, $c->getDigitalTuple($bits));
+    }
 }
