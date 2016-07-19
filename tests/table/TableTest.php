@@ -142,7 +142,7 @@ class TableTest extends \PHPUnit_Framework_TestCase
                     ['A,B', 'CD', "EF\n", 'G'],
                     [3.14, '$#"%'],
                     ],
-                "1,2,3,4\r\na,b,,d\r\n\"A,B\",CD,\"EF\r\",G\r\n3.14,\"$#\"\"%\",,\r\n",
+                "1,2,3,4\r\na,b,,d\r\n\"A,B\",CD,\"EF\n\",G\r\n3.14,\"$#\"\"%\",,\r\n",
                 ],
             ];
     }
