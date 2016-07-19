@@ -80,4 +80,9 @@ class RGB
         $tuple = $this->tuple;
         return array_map(function($v) use ($factor) { return (int)round($v * $factor); }, $tuple);
     }
+
+    public function getDigitalHexTuple($bits)
+    {
+        return array_map(function($v) { return dechex($v); }, $this->getDigitalTuple($bits));
+    }
 }

@@ -267,4 +267,32 @@ class RGBTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($tuple, $c->getDigitalTuple($bits));
     }
+
+    public function getDigitalHexTupleProvider()
+    {
+        return [
+            [new RGB(0.0, 0.0, 0.0), 1, ['0', '0', '0']],
+            [new RGB(0.0, 0.0, 0.0), 2, ['0', '0', '0']],
+            [new RGB(0.0, 0.0, 0.0), 3, ['0', '0', '0']],
+            [new RGB(0.2, 0.3, 0.4), 1, ['0', '0', '0']],
+            [new RGB(0.2, 0.3, 0.4), 2, ['1', '1', '1']],
+            [new RGB(0.2, 0.3, 0.4), 3, ['1', '2', '3']],
+            [new RGB(0.8, 0.9, 1.0), 1, ['1', '1', '1']],
+            [new RGB(0.8, 0.9, 1.0), 2, ['2', '3', '3']],
+            [new RGB(0.8, 0.9, 1.0), 4, ['c', 'e', 'f']],
+            [new RGB(1/7, 1/9, 1/3), 1, ['0', '0', '0']],
+            [new RGB(1/7, 1/9, 1/3), 5, ['4', '3', 'a']],
+            [new RGB(1/7, 1/9, 1/3), 5, ['4', '3', 'a']],
+            [new RGB(1/8, 1/4, 1/2), 6, ['8', '10', '20']],
+            [new RGB(1/4, 1/2, 1/1), 8, ['40', '80', 'ff']],
+            ];
+    }
+
+    /**
+     * @dataProvider getDigitalHexTupleProvider
+     */
+    public function testGetDigitalHexTuple($c, $bits, $tuple)
+    {
+        $this->assertSame($tuple, $c->getDigitalHexTuple($bits));
+    }
 }
