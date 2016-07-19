@@ -64,4 +64,22 @@ class StringHelper
             return implode($glue, $pieces);
         }
     }
+
+    /**
+     * @throws InvalidArgumentException empty needle
+     * @param array $needles
+     * @param string $haystack
+     * @return bool
+     */
+    public static function containsAny(array $needles, $haystack)
+    {
+        foreach($needles as $needle) {
+            if(empty($needle)) {
+                throw new \InvalidArgumentException('empty needle');
+            } elseif(strpos($haystack, $needle) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

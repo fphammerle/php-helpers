@@ -269,4 +269,49 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
             StringHelper::implode(',', [null, null, null])
             );
     }
+
+    public function containsAnyProvider()
+    {
+        return [
+            [['a', 'b', 's'], 'string', true],
+            [['a', 'b'], 'string', false],
+            [['a'], '', false],
+            [['a'], 'string', false],
+            [['ng'], 'string', true],
+            [['ngg', 'ri'], 'string', true],
+            [['ngg'], 'string', false],
+            [['sti', 'sri'], 'string', false],
+            [['sti', 'str', 'sri'], 'string', true],
+            [['str', 'sri'], 'string', true],
+            [[], '', false],
+            [[], 'string', false],
+            ];
+    }
+
+    /**
+     * @dataProvider containsAnyProvider
+     */
+    public function testContainsAny(array $needles, $haystack, $result)
+    {
+        $this->assertSame($result, StringHelper::containsAny($needles, $haystack));
+    }
+
+    public function containsAnyEmptyNeedleProvider()
+    {
+        return [
+            [[''], ''],
+            [[''], 'string'],
+            [['a', '', 'c'], ''],
+            [['a', '', 'c'], 'string'],
+            ];
+    }
+
+    /**
+     * @dataProvider containsAnyEmptyNeedleProvider
+     * @expectedException InvalidArgumentException
+     */
+    public function testContainsAnyEmptyNeedle(array $needles, $haystack)
+    {
+        StringHelper::containsAny($needles, $haystack);
+    }
 }
