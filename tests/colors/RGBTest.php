@@ -295,4 +295,24 @@ class RGBTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($tuple, $c->getDigitalHexTuple($bits));
     }
+
+    public function getHexTripletProvider()
+    {
+        return [
+            [new RGB(1/4, 1/2, 1/1), '4080ff'],
+            [new RGB(0.3, 0.6, 0.9), '4d99e6'],
+            [new RGB(1.0, 1/3, 0.0), 'ff5500'],
+            [new RGB(1/7, 1/8, 1/9), '24201c'],
+            [new RGB(1/16, 1/32, 1/64), '100804'],
+            [new RGB(1/32, 1/64, 1/96), '080403'],
+            ];
+    }
+
+    /**
+     * @dataProvider getHexTripletProvider
+     */
+    public function testGetHexTriplet($c, $triplet)
+    {
+        $this->assertSame($triplet, $c->hexTriplet);
+    }
 }

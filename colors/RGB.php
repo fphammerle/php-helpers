@@ -85,4 +85,15 @@ class RGB
     {
         return array_map(function($v) { return dechex($v); }, $this->getDigitalTuple($bits));
     }
+
+    /**
+     * @return string
+     */
+    public function getHexTriplet()
+    {
+        return implode('', array_map(
+            function($s) { return str_pad($s, 2, '0', STR_PAD_LEFT); },
+            $this->getDigitalHexTuple(8)
+            ));
+    }
 }
