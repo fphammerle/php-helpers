@@ -176,4 +176,216 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $t = new Table($rr);
         $this->assertSame($csv, $t->toCSV($d));
     }
+
+    public function getRowsCountProvider()
+    {
+        return [
+            [[], 0],
+            [[[]], 1],
+            [[['r0c1']], 1],
+            [[['r0c1'], []], 2],
+            [[['r0c1'], [], 4 => []], 5],
+            [[['r0c1'], [], 4 => ['r4c0']], 5],
+            [[7 => [4 => 'r7c4']], 8],
+            [[11 => []], 12],
+            ];
+    }
+
+    /**
+     * @dataProvider getRowsCountProvider
+     */
+    public function testGetRowsCount($vv, $rc)
+    {
+        $t = new Table($vv);
+        $this->assertSame($rc, $t->rowsCount);
+    }
+
+    public function fromAssociativeArrayProvider()
+    {
+        return [
+            [
+                [],
+                [
+                    [],
+                    ],
+                ],
+            [
+                [
+                    [],
+                    ],
+                [
+                    [],
+                    [],
+                    ],
+                ],
+            [
+                [
+                    [],
+                    [],
+                    ],
+                [
+                    [],
+                    [],
+                    [],
+                    ],
+                ],
+            [
+                [
+                    ['a' => 'A'],
+                    ],
+                [
+                    ['a'],
+                    ['A'],
+                    ],
+                ],
+            [
+                [
+                    ['a' => null],
+                    ],
+                [
+                    ['a'],
+                    [null],
+                    ],
+                ],
+            [
+                [
+                    ['a' => 'A', 'b' => 'B'],
+                    ['c' => 'C'],
+                    ],
+                [
+                    ['a', 'b', 'c'],
+                    ['A', 'B', null],
+                    [null, null, 'C'],
+                    ],
+                ],
+            [
+                [
+                    ['a' => 'A', 'b' => 'B1'],
+                    ['b' => 'B2', 'c' => 'C'],
+                    ],
+                [
+                    ['a', 'b', 'c'],
+                    ['A', 'B1', null],
+                    [null, 'B2', 'C'],
+                    ],
+                ],
+            [
+                [
+                    ['a' => 'A1', 'b' => 'B1', 'c' => 'C1'],
+                    ['a' => 'A2', 'b' => 'B2', 'c' => 'C2'],
+                    ['a' => 'A3', 'b' => 'B3', 'c' => 'C3'],
+                    ],
+                [
+                    ['a',  'b',  'c'],
+                    ['A1', 'B1', 'C1'],
+                    ['A2', 'B2', 'C2'],
+                    ['A3', 'B3', 'C3'],
+                    ],
+                ],
+            [
+                [
+                    ['b' => 'B1'],
+                    [],
+                    ['a' => 'A3', 'b' => 'B3', 'c' => 'C3'],
+                    ['d' => 'D4', 'e' => 'E4'],
+                    ['a' => null, 'c' => 'C5'],
+                    ],
+                [
+                    ['b',  'a',  'c',  'd',  'e' ],
+                    ['B1', null, null, null, null],
+                    [null, null, null, null, null],
+                    ['B3', 'A3', 'C3', null, null],
+                    [null, null, null, 'D4', 'E4'],
+                    [null, null, 'C5', null, null],
+                    ],
+                ],
+            [
+                [
+                    ['a' => null, 'd' => 1.23],
+                    ['b' => ''],
+                    ['a' => 3, 'b' => 'ok', 'd' => null],
+                    ],
+                [
+                    ['a',  'd',  'b' ],
+                    [null, 1.23, null],
+                    [null, null, ''  ],
+                    [3,    null, 'ok'],
+                    ],
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider fromAssociativeArrayProvider
+     */
+    public function testFromAssociativeArray($dict, $cells)
+    {
+        $t = Table::fromAssociativeArray($dict);
+        $this->assertSame(sizeof($cells), $t->rowsCount);
+        for($r = 0; $r < sizeof($cells); $r++) {
+            $this->assertSame(
+                sizeof($cells[$r]),
+                $t->getRow($r)->columnsCount,
+                sprintf(
+                    '$cells[%d] = %s, $t->getRow(%d) = %s',
+                    $r,
+                    print_r($cells[$r], true),
+                    $r,
+                    print_r($t->getRow($r), true)
+                    )
+                );
+            for($c = 0; $c < sizeof($cells[$r]); $c++) {
+                if(isset($cells[$r][$c])) {
+                    $this->assertSame($cells[$r][$c], $t->getCell($r, $c)->value);
+                } else {
+                    $this->assertNull($t->getCell($r, $c)->value);
+                }
+            }
+        }
+    }
+
+    public function associativeArrayToCSVProvider()
+    {
+        return [
+            [
+                [
+                    ['a' => 'A', 'b' => 'B1'],
+                    ['b' => 'B2', 'c' => 'C'],
+                    ],
+                "a,b,c\r\nA,B1,\r\n,B2,C\r\n",
+                ],
+            [
+                [
+                    ['b' => 'B1'],
+                    [],
+                    ['a' => 'A3', 'b' => 'B3', 'c' => 'C3'],
+                    ['d' => 'D4', 'e' => 'E4'],
+                    ['a' => null, 'c' => 'C5'],
+                    ],
+                "b,a,c,d,e\r\nB1,,,,\r\n,,,,\r\nB3,A3,C3,,\r\n,,,D4,E4\r\n,,C5,,\r\n",
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider associativeArrayToCSVProvider
+     */
+    public function testAssociativeArrayToCSV($rows_assoc, $csv)
+    {
+        $t = Table::fromAssociativeArray($rows_assoc);
+        $this->assertSame($csv, $t->toCSV());
+    }
+
+    public function testAppendRow()
+    {
+        $t = new Table([['r0c0'], [1 => 'r1c1']]);
+        $this->assertSame(2, $t->rowsCount);
+        $this->assertSame(2, $t->columnsCount);
+        $t->appendRow(new Row(['r2c0', 3 => 'r2c3']));
+        $this->assertSame(3, $t->rowsCount);
+        $this->assertSame(4, $t->columnsCount);
+        $this->assertSame('r2c0', $t->getCell(2, 0)->value);
+        $this->assertNull($t->getCell(2, 1)->value);
+        $this->assertSame('r2c3', $t->getCell(2, 3)->value);
+    }
 }

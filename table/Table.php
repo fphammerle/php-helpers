@@ -39,6 +39,14 @@ class Table
     }
 
     /**
+     * @param Row $row
+     */
+    public function appendRow(Row $row)
+    {
+        $this->_rows[] = $row;
+    }
+
+    /**
      * @throws InvalidArgumentException
      * @param integer $row_index
      * @param Row $row
@@ -84,6 +92,16 @@ class Table
     }
 
     /**
+     * @return integer
+     */
+    public function getRowsCount()
+    {
+        return sizeof($this->_rows) > 0
+            ? max(array_keys($this->_rows)) + 1
+            : 0;
+    }
+
+    /**
      * @return string
      */
     public function toCSV($delimiter = ',')
@@ -98,5 +116,30 @@ class Table
                 : $empty_row_csv;
         }
         return implode('', $rows_csv);
+    }
+
+    /**
+     * @param array<mixed> $rows associative array
+     * @return Table
+     */
+    public static function fromAssociativeArray(array $rows)
+    {
+        $keys = [];
+        foreach($rows as $row) {
+            $keys = array_unique(array_merge($keys, array_keys($row)));
+        }
+        // array_unique preserves keys
+        $keys = array_values($keys);
+
+        $t = new self([$keys]);
+        foreach($rows as $row) {
+            $t->appendRow(new Row(array_map(
+                function($key) use ($row) {
+                    return array_key_exists($key, $row) ? $row[$key] : null;
+                },
+                $keys
+                )));
+        }
+        return $t;
     }
 }
