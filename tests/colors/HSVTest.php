@@ -3,6 +3,7 @@
 namespace fphammerle\helpers\tests\colors;
 
 use \fphammerle\helpers\colors\HSV;
+use \fphammerle\helpers\colors\RGB;
 
 class HSVTest extends \PHPUnit_Framework_TestCase
 {
@@ -254,5 +255,107 @@ class HSVTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($h, $c->tuple,      '', self::comparison_precision);
         $this->assertEquals($h, $c->getTuple(), '', self::comparison_precision);
+    }
+
+    public function toRGBProvider()
+    {
+        return [
+            [new HSV(0.0,       0.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(0.0,       0.0, 1/4), new RGB(1/4, 1/4, 1/4)],
+            [new HSV(0.0,       0.0, 1.0), new RGB(1.0, 1.0, 1.0)],
+            [new HSV(0.0,       1.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(0.0,       1/5, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(1.0,       0.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(1.0,       0.0, 1/4), new RGB(1/4, 1/4, 1/4)],
+            [new HSV(1.0,       0.0, 1.0), new RGB(1.0, 1.0, 1.0)],
+            [new HSV(1.0,       1.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(1.0,       1/5, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()*3/2,  0.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()*3/2,  0.0, 1/4), new RGB(1/4, 1/4, 1/4)],
+            [new HSV(pi()*3/2,  0.0, 1.0), new RGB(1.0, 1.0, 1.0)],
+            [new HSV(pi()*3/2,  1.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()*3/2,  1/5, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi(),      0.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi(),      0.0, 1/4), new RGB(1/4, 1/4, 1/4)],
+            [new HSV(pi(),      0.0, 1.0), new RGB(1.0, 1.0, 1.0)],
+            [new HSV(pi(),      1.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi(),      1/5, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()/2,    0.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()/2,    0.0, 1/4), new RGB(1/4, 1/4, 1/4)],
+            [new HSV(pi()/2,    0.0, 1.0), new RGB(1.0, 1.0, 1.0)],
+            [new HSV(pi()/2,    1.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()/2,    1/5, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()/6*0,  1.0, 1.0), new RGB(1.0, 0.0, 0.0)],
+            [new HSV(pi()/6*0,  1.0, 0.6), new RGB(0.6, 0.0, 0.0)],
+            [new HSV(pi()/6*0,  1.0, 0.2), new RGB(0.2, 0.0, 0.0)],
+            [new HSV(pi()/6*0,  1.0, 0.0), new RGB(0.0, 0.0, 0.0)],
+            [new HSV(pi()/6*1,  1.0, 1.0), new RGB(1.0, 0.5, 0.0)],
+            [new HSV(pi()/6*1,  1.0, 0.6), new RGB(0.6, 0.3, 0.0)],
+            [new HSV(pi()/6*1,  1.0, 0.2), new RGB(1/5, 0.1, 0.0)],
+            [new HSV(pi()/6*2,  1.0, 1.0), new RGB(1.0, 1.0, 0.0)],
+            [new HSV(pi()/6*2,  1.0, 0.6), new RGB(0.6, 0.6, 0.0)],
+            [new HSV(pi()/6*2,  1.0, 0.2), new RGB(0.2, 0.2, 0.0)],
+            [new HSV(pi()/6*3,  1.0, 1.0), new RGB(0.5, 1.0, 0.0)],
+            [new HSV(pi()/6*3,  1.0, 0.6), new RGB(0.3, 0.6, 0.0)],
+            [new HSV(pi()/6*3,  1.0, 0.2), new RGB(0.1, 0.2, 0.0)],
+            [new HSV(pi()/6*4,  1.0, 1.0), new RGB(0.0, 1.0, 0.0)],
+            [new HSV(pi()/6*4,  1.0, 0.6), new RGB(0.0, 0.6, 0.0)],
+            [new HSV(pi()/6*4,  1.0, 0.2), new RGB(0.0, 0.2, 0.0)],
+            [new HSV(pi()/6*5,  1.0, 1.0), new RGB(0.0, 1.0, 0.5)],
+            [new HSV(pi()/6*5,  1.0, 0.6), new RGB(0.0, 0.6, 0.3)],
+            [new HSV(pi()/6*5,  1.0, 0.2), new RGB(0.0, 0.2, 0.1)],
+            [new HSV(pi()/6*6,  1.0, 1.0), new RGB(0.0, 1.0, 1.0)],
+            [new HSV(pi()/6*6,  1.0, 0.6), new RGB(0.0, 0.6, 0.6)],
+            [new HSV(pi()/6*6,  1.0, 0.2), new RGB(0.0, 0.2, 0.2)],
+            [new HSV(pi()/6*7,  1.0, 1.0), new RGB(0.0, 0.5, 1.0)],
+            [new HSV(pi()/6*7,  1.0, 0.6), new RGB(0.0, 0.3, 0.6)],
+            [new HSV(pi()/6*7,  1.0, 0.2), new RGB(0.0, 0.1, 0.2)],
+            [new HSV(pi()/6*8,  1.0, 1.0), new RGB(0.0, 0.0, 1.0)],
+            [new HSV(pi()/6*8,  1.0, 0.6), new RGB(0.0, 0.0, 0.6)],
+            [new HSV(pi()/6*8,  1.0, 0.2), new RGB(0.0, 0.0, 0.2)],
+            [new HSV(pi()/6*9,  1.0, 1.0), new RGB(0.5, 0.0, 1.0)],
+            [new HSV(pi()/6*9,  1.0, 0.6), new RGB(0.3, 0.0, 0.6)],
+            [new HSV(pi()/6*9,  1.0, 0.2), new RGB(0.1, 0.0, 0.2)],
+            [new HSV(pi()/6*10, 1.0, 1.0), new RGB(1.0, 0.0, 1.0)],
+            [new HSV(pi()/6*10, 1.0, 0.6), new RGB(0.6, 0.0, 0.6)],
+            [new HSV(pi()/6*10, 1.0, 0.2), new RGB(0.2, 0.0, 0.2)],
+            [new HSV(pi()/6*11, 1.0, 1.0), new RGB(1.0, 0.0, 0.5)],
+            [new HSV(pi()/6*11, 1.0, 0.6), new RGB(0.6, 0.0, 0.3)],
+            [new HSV(pi()/6*11, 1.0, 0.2), new RGB(0.2, 0.0, 0.1)],
+            [new HSV(deg2rad(10),  0.8, 0.4), new RGB(102/255,     34/255,      20.4/255   )],
+            [new HSV(deg2rad(35),  0.8, 0.4), new RGB(102/255,     68/255,      20.4/255   )],
+            [new HSV(deg2rad(35),  0.3, 0.6), new RGB(153/255,     133.875/255, 107.1/255  )],
+            [new HSV(deg2rad(100), 0.3, 0.6), new RGB(122.4/255,   153/255,     107.1/255  )],
+            [new HSV(deg2rad(130), 0.6, 0.2), new RGB(20.4/255,    51/255,      25.5/255   )],
+            [new HSV(deg2rad(155), 0.6, 0.9), new RGB(91.8/255,    229.5/255,   172.125/255)],
+            [new HSV(deg2rad(200), 0.8, 0.6), new RGB(30.6/255,    112.2/255,   153/255    )],
+            [new HSV(deg2rad(226), 0.8, 0.6), new RGB(30.6/255,    59.16/255,   153/255    )],
+            [new HSV(deg2rad(226), 0.1, 0.5), new RGB(114.75/255,  117.725/255, 127.5/255  )],
+            [new HSV(deg2rad(250), 0.9, 0.9), new RGB(57.373/255,  22.95/255,   229.5/255  )],
+            [new HSV(deg2rad(270), 0.9, 0.9), new RGB(126.225/255, 22.95/255,   229.5/255  )],
+            [new HSV(deg2rad(295), 0.7, 0.9), new RGB(216.11/255,  68.85/255,   229.5/255  )],
+            [new HSV(deg2rad(322), 0.7, 0.9), new RGB(229.5/255,   68.85/255,   170.595/255)],
+            [new HSV(deg2rad(322), 0.8, 0.4), new RGB(102/255,     20.4/255,    72.08/255  )],
+            [new HSV(deg2rad(340), 0.8, 0.4), new RGB(102/255,     20.4/255,    47.6/255   )],
+            [new HSV(deg2rad(359), 0.8, 0.4), new RGB(102/255,     20.4/255,    21.76/255  )],
+            [new HSV(deg2rad(359), 0.5, 0.1), new RGB(25.5/255,    12.75/255,   12.96/255  )],
+            ];
+    }
+
+    /**
+     * @dataProvider toRGBProvider
+     */
+    public function testToRGB($hsv, $rgb_e)
+    {
+        $rgb_r = $hsv->toRGB();
+        $this->assertTrue(
+            $rgb_e->equals($rgb_r),
+            sprintf(
+                "\$hsv = %s\n\$hsv->toRGB() = %s\n\$rgb_e = %s",
+                print_r($hsv, true),
+                print_r($rgb_r, true),
+                print_r($rgb_e, true)
+                )
+            );
     }
 }

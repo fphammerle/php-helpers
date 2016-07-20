@@ -72,4 +72,29 @@ class HSV
             && abs($this->saturation - $other->saturation) < self::comparison_precision
             && abs($this->value - $other->value) < self::comparison_precision;
     }
+
+    public function toRGB()
+    {
+        // @see https://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB
+        $chroma = $this->value * $this->saturation; // [0, 1]
+        $basic_hue = $this->hue / deg2rad(60);  // [0, 6]
+        $x = $chroma * (1 - abs(fmod($basic_hue, 2.0) - 1));
+        if(0.0 <= $basic_hue && $basic_hue < 1.0) {
+            $r = $chroma; $g = $x; $b = 0.0;
+        } elseif(1.0 <= $basic_hue && $basic_hue < 2.0) {
+            $r = $x; $g = $chroma; $b = 0.0;
+        } elseif(2.0 <= $basic_hue && $basic_hue < 3.0) {
+            $r = 0.0; $g = $chroma; $b = $x;
+        } elseif(3.0 <= $basic_hue && $basic_hue < 4.0) {
+            $r = 0.0; $g = $x; $b = $chroma;
+        } elseif(4.0 <= $basic_hue && $basic_hue < 5.0) {
+            $r = $x; $g = 0.0; $b = $chroma;
+        } elseif(5.0 <= $basic_hue && $basic_hue < 6.0) {
+            $r = $chroma; $g = 0.0; $b = $x;
+        } else {
+            $r = 0.0; $g = 0.0; $b = 0.0;
+        }
+        $m  = $this->value - $chroma;
+        return new RGB($r + $m, $g + $m, $b + $m);
+    }
 }
