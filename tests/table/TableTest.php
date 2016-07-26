@@ -471,6 +471,22 @@ class TableTest extends \PHPUnit_Framework_TestCase
                     '__   *** 3.33    ',
                     ]) . "\n",
                 ],
+            [
+                new Table([
+                    ['r0c0',     "r0\nc1", 'r0c2'  ],
+                    ["r1\n\nc0", 'r1c1',   "\nr1c2"],
+                    ["r2c0\n",   'r2c1',   'r2c2'  ],
+                    ]),
+                implode("\n", [
+                    'r0c0 r0   r0c2',
+                    '     c1       ',
+                    'r1   r1c1     ',
+                    '          r1c2',
+                    'c0            ',
+                    'r2c0 r2c1 r2c2',
+                    '              ',
+                    ]) . "\n",
+                ],
             ];
     }
 
@@ -496,6 +512,26 @@ class TableTest extends \PHPUnit_Framework_TestCase
                     'a bb       ',
                     '  bbb c    ',
                     '          d',
+                    ]) . "\n",
+                ],
+            [
+                [
+                    ['a' => 'laaang', 'b' => 'kurz'],
+                    ['a' => 'kurz', 'c' => "new\nline"],
+                    ['a' => '1st', 'b' => "\n2nd", 'c' => "\n\n3rd"],
+                    ['b' => "\ncenter\n"],
+                    ],
+                implode("\n", [
+                    'a      b      c   ',
+                    'laaang kurz       ',
+                    'kurz          new ',
+                    '              line',
+                    '1st               ',
+                    '       2nd        ',
+                    '              3rd ',
+                    '                  ',
+                    '       center     ',
+                    '                  ',
                     ]) . "\n",
                 ],
             ];

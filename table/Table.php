@@ -131,38 +131,49 @@ class Table
             return str_repeat("\n", $rows_number);
         }
         $cols_max_length = [];
-        $string_table = new self();
+        $string_table = [];
         for($col_index = 0; $col_index < $cols_number; $col_index++) {
             $cols_max_length[$col_index] = 0;
             for($row_index = 0; $row_index < $rows_number; $row_index++) {
                 $cell_value = $this->getCell($row_index, $col_index)->value;
                 if($cell_value === false) {
-                    $cell_value_string = '0';
+                    $cell_value_lines = ['0'];
                 } else {
-                    $cell_value_string = (string)$cell_value;
+                    $cell_value_lines = explode("\n", (string)$cell_value);
+                    assert(sizeof($cell_value_lines) > 0);
                 }
-                $string_table->setCellValue($row_index, $col_index, $cell_value_string);
+                $string_table[$row_index][$col_index] = $cell_value_lines;
                 $cols_max_length[$col_index] = max(
-                    strlen($cell_value_string),
+                    max(array_map(
+                        function($line) { return strlen($line); },
+                        $cell_value_lines
+                        )),
                     $cols_max_length[$col_index]
                     );
             }
         }
         return implode("\n", array_map(
             function($row) use ($cols_number, $cols_max_length) {
-                $line = '';
-                for($col_index = 0; $col_index < $cols_number; $col_index++) {
-                    $line .= str_pad(
-                        $row->getCell($col_index)->value,
-                        $cols_max_length[$col_index]
-                            + ($col_index + 1 == $cols_number ? 0 : 1),
-                        ' ',
-                        STR_PAD_RIGHT
-                        );
+                $lines_number = max(array_map(function($c) { return sizeof($c); }, $row));
+                $lines = [];
+                for($line_index = 0; $line_index < $lines_number; $line_index++) {
+                    $line = '';
+                    for($col_index = 0; $col_index < $cols_number; $col_index++) {
+                        $line .= str_pad(
+                            isset($row[$col_index][$line_index])
+                                ? $row[$col_index][$line_index]
+                                : '',
+                            $cols_max_length[$col_index]
+                                + ($col_index + 1 == $cols_number ? 0 : 1),
+                            ' ',
+                            STR_PAD_RIGHT
+                            );
+                    }
+                    $lines[] = $line;
                 }
-                return $line;
+                return implode("\n", $lines);
                 },
-            $string_table->_rows
+            $string_table
             )) . "\n";
     }
 
