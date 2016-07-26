@@ -388,4 +388,125 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($t->getCell(2, 1)->value);
         $this->assertSame('r2c3', $t->getCell(2, 3)->value);
     }
+
+    public function toTextProvider()
+    {
+        return [
+            [
+                new Table([]),
+                '',
+                ],
+            [
+                new Table([
+                    [],
+                    ]),
+                "\n",
+                ],
+            [
+                new Table([
+                    [],
+                    [],
+                    ]),
+                "\n\n",
+                ],
+            [
+                new Table([
+                    ['22'],
+                    ]),
+                "22\n",
+                ],
+            [
+                new Table([
+                    [null],
+                    ]),
+                "\n",
+                ],
+            [
+                new Table([
+                    ['1', '', '22', '333'],
+                    ]),
+                "1  22 333\n",
+                ],
+            [
+                new Table([
+                    [],
+                    ['2', '', '22', '333'],
+                    ['22'],
+                    ]),
+                implode("\n", [
+                    '          ',
+                    '2   22 333',
+                    '22        ',
+                    ]) . "\n",
+                ],
+            [
+                new Table([
+                    ['22', '1', '2',  '3'  ],
+                    ['2',  '',  '22', '333'],
+                    ]),
+                implode("\n", [
+                    '22 1 2  3  ',
+                    '2    22 333',
+                    ]) . "\n",
+                ],
+            [
+                new Table([
+                    ['33',  '',  '', '22', ''],
+                    ['3',   '1', '', '2',  ''],
+                    ['333', '',  '', '2',  ''],
+                    ]),
+                implode("\n", [
+                    '33     22 ',
+                    '3   1  2  ',
+                    '333    2  ',
+                    ]) . "\n",
+                ],
+            [
+                new Table([
+                    [true, false, null,  '',   1    ],
+                    ['__', null,  '***', 3.33, '   '],
+                    ]),
+                implode("\n", [
+                    '1  0          1  ',
+                    '__   *** 3.33    ',
+                    ]) . "\n",
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider toTextProvider
+     */
+    public function testToText($table, $expected_text)
+    {
+        $this->assertSame($expected_text, $table->toText());
+    }
+
+    public function associativeArrayToTextProvider()
+    {
+        return [
+            [
+                [
+                    ['A' => 'a', 'B' => 'bb'],
+                    ['B' => 'bbb', 'CCC' => 'c'],
+                    ['D' => 'd'],
+                    ],
+                implode("\n", [
+                    'A B   CCC D',
+                    'a bb       ',
+                    '  bbb c    ',
+                    '          d',
+                    ]) . "\n",
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider associativeArrayToTextProvider
+     */
+    public function testAssociativeArrayToText($rows, $expected_text)
+    {
+        $t = Table::fromAssociativeArray($rows);
+        $this->assertSame($expected_text, $t->toText());
+    }
 }

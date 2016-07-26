@@ -109,13 +109,61 @@ class Table
         $columns_number = $this->columnsCount;
         $empty_row_csv = (new Row)->toCSV($delimiter, $columns_number);
         $rows_csv = [];
-        $rows_number = sizeof($this->_rows) > 0 ? max(array_keys($this->_rows)) + 1 : 0;
+        $rows_number = $this->rowsCount;
         for($row_index = 0; $row_index < $rows_number; $row_index++) {
             $rows_csv[] = isset($this->_rows[$row_index])
                 ? $this->_rows[$row_index]->toCSV($delimiter, $columns_number)
                 : $empty_row_csv;
         }
         return implode('', $rows_csv);
+    }
+
+    /**
+     * @return string
+     */
+    public function toText()
+    {
+        $rows_number = $this->rowsCount;
+        $cols_number = $this->columnsCount;
+        if($rows_number == 0) {
+            return '';
+        } elseif($cols_number == 0) {
+            return str_repeat("\n", $rows_number);
+        }
+        $cols_max_length = [];
+        $string_table = new self();
+        for($col_index = 0; $col_index < $cols_number; $col_index++) {
+            $cols_max_length[$col_index] = 0;
+            for($row_index = 0; $row_index < $rows_number; $row_index++) {
+                $cell_value = $this->getCell($row_index, $col_index)->value;
+                if($cell_value === false) {
+                    $cell_value_string = '0';
+                } else {
+                    $cell_value_string = (string)$cell_value;
+                }
+                $string_table->setCellValue($row_index, $col_index, $cell_value_string);
+                $cols_max_length[$col_index] = max(
+                    strlen($cell_value_string),
+                    $cols_max_length[$col_index]
+                    );
+            }
+        }
+        return implode("\n", array_map(
+            function($row) use ($cols_number, $cols_max_length) {
+                $line = '';
+                for($col_index = 0; $col_index < $cols_number; $col_index++) {
+                    $line .= str_pad(
+                        $row->getCell($col_index)->value,
+                        $cols_max_length[$col_index]
+                            + ($col_index + 1 == $cols_number ? 0 : 1),
+                        ' ',
+                        STR_PAD_RIGHT
+                        );
+                }
+                return $line;
+                },
+            $string_table->_rows
+            )) . "\n";
     }
 
     /**
