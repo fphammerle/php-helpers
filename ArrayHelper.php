@@ -14,4 +14,29 @@ class ArrayHelper
             false
             );
     }
+
+    /**
+     * @param array $source_array
+     * @param \Closure $callback
+     * @return array
+     */
+   public static function multimap(array $source_array, \Closure $callback)
+   {
+       $mapped_array = [];
+       foreach($source_array as $old_key => $old_value) {
+           $pairs = $callback($old_key, $old_value);
+           if($pairs === null) {
+               // skipp
+           } elseif(is_array($pairs)) {
+               foreach($pairs as $new_key => $new_pair) {
+                   $mapped_array[$new_key] = $new_pair;
+               }
+           } else {
+               throw new \UnexpectedValueException(
+                    sprintf('expected array, %s given', gettype($pairs))
+                    );
+           }
+       }
+       return $mapped_array;
+   }
 }
