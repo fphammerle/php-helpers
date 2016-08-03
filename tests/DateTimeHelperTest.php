@@ -121,4 +121,49 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         DateTimeHelper::parse($text);
     }
+
+    public function parseGetStartProvider()
+    {
+        return [
+            [null, 'UTC', null],
+            [null, 'US/Pacific', null],
+            ['2016-08-02', 'UTC', new \DateTime('2016-08-02T00:00:00Z')],
+            ['2016-08-02', 'Europe/Vienna', new \DateTime('2016-08-02T00:00:00+02:00')],
+            ['2016-08-02', 'Europe/Vienna', new \DateTime('2016-08-01T22:00:00Z')],
+            ['2016-08-02 15:52:13', 'UTC',  new \DateTime('2016-08-02T15:52:13Z')],
+            ['2016-08-02 15:52:13', 'Europe/Vienna',  new \DateTime('2016-08-02T15:52:13+02:00')],
+            ['2016-08-02 15:52:13', 'Europe/Vienna',  new \DateTime('2016-08-02T13:52:13Z')],
+            ['2016-08-02T15:52:13', 'US/Pacific',  new \DateTime('2016-08-02T15:52:13-07:00')],
+            ];
+    }
+
+    /**
+     * @dataProvider parseGetStartProvider
+     */
+    public function testParseGetStart($text, $timezone, $expected)
+    {
+        date_default_timezone_set($timezone);
+        $this->assertEquals($expected, DateTimeHelper::parseGetStart($text));
+    }
+
+    public function parseGetStartInvalidArgumentProvider()
+    {
+        return [
+            ['     '],
+            [''],
+            ['2016--12'],
+            ['2016-10-12 08:20#01'],
+            [1],
+            [false],
+            ];
+    }
+
+    /**
+     * @dataProvider parseGetStartInvalidArgumentProvider
+     * @expectedException \InvalidArgumentException
+     */
+    public function testParseGetStartInvalidArgument($text)
+    {
+        DateTimeHelper::parseGetStart($text);
+    }
 }

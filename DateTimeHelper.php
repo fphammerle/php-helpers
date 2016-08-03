@@ -6,7 +6,7 @@ class DateTimeHelper
 {
     /**
      * @param integer|null $timestamp unix timestamp
-     * @return DateTime|null
+     * @return \DateTime|null
      */
     public static function timestampToDateTime($timestamp)
     {
@@ -23,7 +23,7 @@ class DateTimeHelper
 
     /**
      * @param string|null $text
-     * @return DatePeriod|null
+     * @return \DatePeriod|null
      */
     public static function parse($text)
     {
@@ -56,6 +56,20 @@ class DateTimeHelper
                     sprintf("could not parse string '%s'", $text)
                     );
             }
+        }
+    }
+
+    /**
+     * @param string|null $text
+     * @return \DateTime|null
+     */
+    public static function parseGetStart($text)
+    {
+        $period = self::parse($text);
+        if($period) {
+            return $period->start;
+        } else {
+            return null;
         }
     }
 }
