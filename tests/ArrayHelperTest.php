@@ -106,6 +106,11 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 'gnirts',
                 ],
             [
+                'string',
+                function($v) { return null; },
+                null,
+                ],
+            [
                 ['a' => 1, 'b' => 2, 'c' => 3],
                 function($v) { return $v; },
                 ['a' => 1, 'b' => 2, 'c' => 3],
@@ -134,6 +139,55 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
     public function testMap($source, $callback, $expected)
     {
         $this->assertSame($expected, ArrayHelper::map($source, $callback));
+    }
+
+    public function mapIfSetProvider()
+    {
+        return [
+            [
+                null,
+                function($v) { return 1; },
+                null,
+                ],
+            [
+                'string',
+                function($v) { return strrev($v); },
+                'gnirts',
+                ],
+            [
+                'string',
+                function($v) { return null; },
+                null,
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($v) { return $v; },
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($v) { return $v < 2 ? null : $v; },
+                ['a' => null, 'b' => 2, 'c' => 3],
+                ],
+            [
+                ['a' => 1, 'b' => null, 'c' => 3],
+                function($v) { return (string)$v; },
+                ['a' => '1', 'b' => null, 'c' => '3'],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'b' => 3],
+                function($v) { return $v * $v; },
+                ['a' => 1, 'b' => 4, 'b' => 9],
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider mapIfSetProvider
+     */
+    public function testMapIfSet($source, $callback, $expected)
+    {
+        $this->assertSame($expected, ArrayHelper::mapIfSet($source, $callback));
     }
 
     public function multimapProvider()

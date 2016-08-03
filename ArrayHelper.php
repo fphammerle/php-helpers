@@ -30,6 +30,27 @@ class ArrayHelper
    }
 
     /**
+     * @param mixed $source_array
+     * @param \Closure $callback
+     * @return mixed
+     */
+    public static function mapIfSet($source, \Closure $callback)
+    {
+        if($source === null) {
+            return null;
+        } elseif(is_array($source)) {
+            return array_map(
+                function($v) use ($callback) {
+                    return $v === null ? null : $callback($v);
+                    },
+                $source
+                );
+       } else {
+           return $callback($source);
+       }
+   }
+
+    /**
      * @param array $source_array
      * @param \Closure $callback
      * @return array
