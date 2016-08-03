@@ -16,6 +16,20 @@ class ArrayHelper
     }
 
     /**
+     * @param mixed $source_array
+     * @param \Closure $callback
+     * @return mixed
+     */
+   public static function map($source, \Closure $callback)
+   {
+       if(is_array($source)) {
+           return array_map($callback, $source);
+       } else {
+           return $callback($source);
+       }
+   }
+
+    /**
      * @param array $source_array
      * @param \Closure $callback
      * @return array

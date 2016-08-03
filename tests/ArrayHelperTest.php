@@ -92,6 +92,50 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
             );
     }
 
+    public function mapProvider()
+    {
+        return [
+            [
+                null,
+                function($v) { return 1; },
+                1,
+                ],
+            [
+                'string',
+                function($v) { return strrev($v); },
+                'gnirts',
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($v) { return $v; },
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($v) { return $v < 2 ? null : $v; },
+                ['a' => null, 'b' => 2, 'c' => 3],
+                ],
+            [
+                ['a' => 1, 'b' => null, 'c' => 3],
+                function($v) { return $v; },
+                ['a' => 1, 'b' => null, 'c' => 3],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'b' => 3],
+                function($v) { return $v * $v; },
+                ['a' => 1, 'b' => 4, 'b' => 9],
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider mapProvider
+     */
+    public function testMap($source, $callback, $expected)
+    {
+        $this->assertSame($expected, ArrayHelper::map($source, $callback));
+    }
+
     public function multimapProvider()
     {
         return [
