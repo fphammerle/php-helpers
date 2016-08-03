@@ -25,4 +25,38 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, HtmlHelper::encode($string));
     }
+
+    public function endTagTypeErrorProvider()
+    {
+        return [
+            [1],
+            [false],
+            ];
+    }
+
+    /**
+     * @dataProvider endTagTypeErrorProvider
+     * @expectedException \TypeError
+     */
+    public function testEndTagTypeError($name)
+    {
+        HtmlHelper::endTag($name);
+    }
+
+    public function endTagProvider()
+    {
+        return [
+            ['tag', '</tag>'],
+            ['end', '</end>'],
+            [null, null],
+            ];
+    }
+
+    /**
+     * @dataProvider endTagProvider
+     */
+    public function testEndTag($name, $expected_tag)
+    {
+        $this->assertSame($expected_tag, HtmlHelper::endTag($name));
+    }
 }
