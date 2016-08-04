@@ -20,14 +20,24 @@ class ArrayHelper
      * @param \Closure $callback
      * @return mixed
      */
-   public static function map($source, \Closure $callback)
-   {
-       if(is_array($source)) {
-           return array_map($callback, $source);
-       } else {
-           return $callback($source);
-       }
-   }
+    public static function map($source, \Closure $callback)
+    {
+        $callback_reflection = new \ReflectionFunction($callback);
+        if($callback_reflection->getNumberOfRequiredParameters() == 1) {
+            $mapper = function($k, $v) use ($callback) {
+                return $callback($v);
+                };
+        } else {
+            $mapper = $callback;
+        }
+        if(is_array($source)) {
+            return self::multimap($source, function($k, $v) use ($mapper) {
+                return [$k => $mapper($k, $v)];
+                });
+        } else {
+            return $mapper(null, $source);
+        }
+    }
 
     /**
      * @param mixed $source_array
@@ -38,17 +48,20 @@ class ArrayHelper
     {
         if($source === null) {
             return null;
-        } elseif(is_array($source)) {
-            return array_map(
-                function($v) use ($callback) {
-                    return $v === null ? null : $callback($v);
-                    },
-                $source
-                );
-       } else {
-           return $callback($source);
-       }
-   }
+        } else {
+            $callback_reflection = new \ReflectionFunction($callback);
+            if($callback_reflection->getNumberOfRequiredParameters() == 1) {
+                $mapper = function($k, $v) use ($callback) {
+                    return is_null($v) ? null : $callback($v);
+                    };
+            } else {
+                $mapper = function($k, $v) use ($callback) {
+                    return is_null($v) ? null : $callback($k, $v);
+                    };
+            }
+            return self::map($source, $mapper);
+        }
+    }
 
     /**
      * @param array $source_array
@@ -61,7 +74,7 @@ class ArrayHelper
        foreach($source_array as $old_key => $old_value) {
            $pairs = $callback($old_key, $old_value);
            if($pairs === null) {
-               // skipp
+               // skip
            } elseif(is_array($pairs)) {
                foreach($pairs as $new_key => $new_pair) {
                    $mapped_array[$new_key] = $new_pair;

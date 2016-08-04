@@ -230,44 +230,27 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
             );
     }
 
-    public function testImplode()
+    public function implodeProvider()
     {
-        $this->assertEquals(
-            'a,b,c,d',
-            StringHelper::implode(',', ['a', 'b', 'c', 'd'])
-            );
+        return [
+            [',', ['a', 'b', null, 'd'], 'a,b,d'],
+            [',', ['a', 'b', '', 'd'], 'a,b,,d'],
+            [',', ['a', 'b', 'c', 'd'], 'a,b,c,d'],
+            [',', [null, null, null], null],
+            [',', null, null],
+            ['', ['a', '', 'c', 'd'], 'acd'],
+            ['', ['a', 3, 'c', 'd'], 'a3cd'],
+            ['', ['a', 'b', 'c', 'd'], 'abcd'],
+            [null, ['a', 'b', 'c', 'd'], 'abcd'],
+            ];
     }
 
-    public function testImplodeWithNull()
+    /**
+     * @dataProvider implodeProvider
+     */
+    public function testImplode($glue, $pieces, $expected)
     {
-        $this->assertEquals(
-            'a,b,d',
-            StringHelper::implode(',', ['a', 'b', null, 'd'])
-            );
-    }
-
-    public function testImplodeEmpty()
-    {
-        $this->assertEquals(
-            'acd',
-            StringHelper::implode('', ['a', '', 'c', 'd'])
-            );
-    }
-
-    public function testImplodeByEmpty()
-    {
-        $this->assertEquals(
-            'abcd',
-            StringHelper::implode('', ['a', 'b', 'c', 'd'])
-            );
-    }
-
-    public function testImplodeNothing()
-    {
-        $this->assertEquals(
-            null,
-            StringHelper::implode(',', [null, null, null])
-            );
+        $this->assertSame($expected, StringHelper::implode($glue, $pieces));
     }
 
     public function containsAnyProvider()

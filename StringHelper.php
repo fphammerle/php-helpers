@@ -55,13 +55,20 @@ class StringHelper
     /**
      * @return string|null
      */
-    public static function implode($glue, array $pieces)
+    public static function implode($glue, array $pieces = null)
     {
-        $pieces = array_filter($pieces);
-        if(sizeof($pieces) == 0) {
+        if($pieces === null) {
             return null;
         } else {
-            return implode($glue, $pieces);
+            $pieces = array_filter(
+                $pieces,
+                function($piece) { return $piece !== null; }
+                );
+            if(sizeof($pieces) == 0) {
+                return null;
+            } else {
+                return implode($glue, $pieces);
+            }
         }
     }
 

@@ -111,6 +111,11 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 null,
                 ],
             [
+                'string',
+                function($k, $v) { return [$v => $k]; },
+                ['string' => null],
+                ],
+            [
                 ['a' => 1, 'b' => 2, 'c' => 3],
                 function($v) { return $v; },
                 ['a' => 1, 'b' => 2, 'c' => 3],
@@ -126,9 +131,24 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 ['a' => 1, 'b' => null, 'c' => 3],
                 ],
             [
-                ['a' => 1, 'b' => 2, 'b' => 3],
+                ['a' => 1, 'b' => 2, 'c' => 3],
                 function($v) { return $v * $v; },
-                ['a' => 1, 'b' => 4, 'b' => 9],
+                ['a' => 1, 'b' => 4, 'c' => 9],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($k, $v) { return $k . $v; },
+                ['a' => 'a1', 'b' => 'b2', 'c' => 'c3'],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($k, $v) { return [strtoupper($k) => $v]; },
+                ['a' => ['A' => 1], 'b' => ['B' => 2], 'c' => ['C' => 3]],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => null],
+                function($k, $v) { return $k . (is_null($v) ? ' null' : ' not null'); },
+                ['a' => 'a not null', 'b' => 'b not null', 'c' => 'c null'],
                 ],
             ];
     }
@@ -178,6 +198,21 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
                 ['a' => 1, 'b' => 2, 'b' => 3],
                 function($v) { return $v * $v; },
                 ['a' => 1, 'b' => 4, 'b' => 9],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($k, $v) { return $k . $v; },
+                ['a' => 'a1', 'b' => 'b2', 'c' => 'c3'],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => 3],
+                function($k, $v) { return [strtoupper($k) => $v]; },
+                ['a' => ['A' => 1], 'b' => ['B' => 2], 'c' => ['C' => 3]],
+                ],
+            [
+                ['a' => 1, 'b' => 2, 'c' => null],
+                function($k, $v) { return $k . (is_null($v) ? ' null' : ' not null'); },
+                ['a' => 'a not null', 'b' => 'b not null', 'c' => null],
                 ],
             ];
     }
