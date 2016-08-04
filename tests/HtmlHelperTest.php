@@ -26,6 +26,54 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, HtmlHelper::encode($string));
     }
 
+    public function voidTagTypeErrorProvider()
+    {
+        return [
+            [1, []],
+            [false, []],
+            ['tag', true],
+            ['tag', 'attr'],
+            ];
+    }
+
+    /**
+     * @dataProvider voidTagTypeErrorProvider
+     * @expectedException \TypeError
+     */
+    public function testVoidTagTypeError($name, $attributes)
+    {
+        HtmlHelper::voidTag($name, $attributes);
+    }
+
+    public function voidTagProvider()
+    {
+        return [
+            ['tag', [], '<tag />'],
+            ['void', ['a' => '1'], '<void a="1" />'],
+            ['void', ['a' => 1], '<void a="1" />'],
+            ['void', ['a' => '1', 'b' => '2'], '<void a="1" b="2" />'],
+            ['void', ['b' => '1', 'a' => '2'], '<void b="1" a="2" />'],
+            ['void', ['a' => null, 'b' => '2'], '<void b="2" />'],
+            ['void', ['a' => true], '<void a="a" />'],
+            ['void', ['a' => true, 'b' => '2'], '<void a="a" b="2" />'],
+            ['void', ['a' => false], '<void />'],
+            ['void', ['a' => false, 'b' => '2'], '<void b="2" />'],
+            ['script', ['type' => 'text/javascript'], '<script type="text/javascript" />'],
+            ['span', ['onclick' => 'alert(":-)")'], '<span onclick="alert(&quot;:-)&quot;)" />'],
+            ['span', ['onclick' => "alert(':-)')"], '<span onclick="alert(&#039;:-)&#039;)" />'],
+            [null, [], null],
+            [null, ['attr' => 'v'], null],
+            ];
+    }
+
+    /**
+     * @dataProvider voidTagProvider
+     */
+    public function testVoidTag($name, $attributes, $expected_tag)
+    {
+        $this->assertSame($expected_tag, HtmlHelper::voidTag($name, $attributes));
+    }
+
     public function startTagTypeErrorProvider()
     {
         return [
