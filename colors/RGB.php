@@ -75,10 +75,11 @@ class RGB
 
     public function getDigitalTuple($bits)
     {
-        $bits = (int)$bits;
         $factor = (2 << ($bits - 1)) - 1;
-        $tuple = $this->tuple;
-        return array_map(function($v) use ($factor) { return (int)round($v * $factor); }, $tuple);
+        return array_map(
+            function($v) use ($factor) { return (int)round($v * $factor); },
+            $this->tuple
+            );
     }
 
     public function getDigitalHexTuple($bits)
@@ -93,7 +94,7 @@ class RGB
     {
         return implode('', array_map(
             function($s) { return str_pad($s, 2, '0', STR_PAD_LEFT); },
-            $this->getDigitalHexTuple(8)
+            array_slice($this->getDigitalHexTuple(8), 0, 3)
             ));
     }
 }

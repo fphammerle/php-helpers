@@ -12,8 +12,8 @@ class Image
 
     public function __destruct()
     {
-        if($this->resource) {
-            imagedestroy($this->resource);
+        if($this->_resource) {
+            imagedestroy($this->_resource);
         }
     }
 
@@ -26,7 +26,7 @@ class Image
         switch(exif_imagetype($path)) {
             case IMAGETYPE_JPEG:
                 $image = new self;
-                $image->resource = imagecreatefromjpeg($path);
+                $image->_resource = imagecreatefromjpeg($path);
                 return $image;
             default:
                 throw new \InvalidArgumentException("type of '$path' is not supported");
@@ -39,9 +39,9 @@ class Image
      */
     public function rotate($angle)
     {
-        $resource = imagerotate($this->resource, $angle, 0);
-        imagedestroy($this->resource);
-        $this->resource = $resource;
+        $resource = imagerotate($this->_resource, $angle, 0);
+        imagedestroy($this->_resource);
+        $this->_resource = $resource;
     }
 
     /**
@@ -66,6 +66,6 @@ class Image
      */
     public function saveJpeg($path)
     {
-        imagejpeg($this->resource, $path);
+        imagejpeg($this->_resource, $path);
     }
 }
