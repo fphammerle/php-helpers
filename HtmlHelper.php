@@ -71,4 +71,14 @@ class HtmlHelper
             return '</' . $name . '>';
         }
     }
+
+    public static function nonVoidTag($tag_name, $content, array $attributes = [])
+    {
+        // @see https://www.w3.org/TR/html-markup/syntax.html#syntax-elements
+        return StringHelper::embed(
+            self::startTag($tag_name, $attributes),
+            $content,
+            self::endTag($tag_name)
+            );
+    }
 }
