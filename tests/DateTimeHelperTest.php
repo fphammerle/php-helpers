@@ -166,4 +166,146 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         DateTimeHelper::parseGetStart($text);
     }
+
+    public function deinvertIntervalProvider()
+    {
+        return [
+            [
+                \DateInterval::createFromDateString('-2 years'),
+                ['y' => -2, 'm' => 0, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                \DateInterval::createFromDateString('-2 months'),
+                ['y' => 0, 'm' => -2, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                \DateInterval::createFromDateString('-2 days'),
+                ['y' => 0, 'm' => 0, 'd' => -2, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                \DateInterval::createFromDateString('-2 hours'),
+                ['y' => 0, 'm' => 0, 'd' => 0, 'h' => -2, 'i' => 0, 's' => 0],
+                ],
+            [
+                \DateInterval::createFromDateString('-2 minutes'),
+                ['y' => 0, 'm' => 0, 'd' => 0, 'h' => 0, 'i' => -2, 's' => 0],
+                ],
+            [
+                \DateInterval::createFromDateString('-2 seconds'),
+                ['y' => 0, 'm' => 0, 'd' => 0, 'h' => 0, 'i' => 0, 's' => -2],
+                ],
+            [
+                (new \DateTime('2016-08'))->diff(new \DateTime('2016-07')),
+                ['y' => 0, 'm' => -1, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-08-03'))->diff(new \DateTime('2016-07-03')),
+                ['y' => 0, 'm' => -1, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-07-03'))->diff(new \DateTime('2016-08-03')),
+                ['y' => 0, 'm' => 1, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-08-04'))->diff(new \DateTime('2016-07-03')),
+                ['y' => 0, 'm' => -1, 'd' => -1, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-07-03'))->diff(new \DateTime('2016-08-04')),
+                ['y' => 0, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-08-02'))->diff(new \DateTime('2016-07-03')),
+                ['y' => 0, 'm' => 0, 'd' => -30, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-07-03'))->diff(new \DateTime('2016-08-02')),
+                ['y' => 0, 'm' => 0, 'd' => 30, 'h' => 0, 'i' => 0, 's' => 0],
+                ],
+            [
+                (new \DateTime('2016-08-04 18:10:02'))->diff(new \DateTime('2016-07-03 14:13:03')),
+                ['y' => 0, 'm' => -1, 'd' => -1, 'h' => -3, 'i' => -56, 's' => -59],
+                ],
+            [
+                (new \DateTime('2016-07-03 14:13:03'))->diff(new \DateTime('2016-08-04 18:10:02')),
+                ['y' => 0, 'm' => 1, 'd' => 1, 'h' => 3, 'i' => 56, 's' => 59],
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider deinvertIntervalProvider
+     */
+    public function testDeinvertInterval($source, $expected_attr)
+    {
+        // \DateInterval does not implement clone.
+        // @see https://bugs.php.net/bug.php?id=50559
+        $source_copy = unserialize(serialize($source));
+        $deinverted = DateTimeHelper::deinvertInterval($source_copy);
+        $this->assertEquals($source, $source_copy);
+        $this->assertEquals(0, $deinverted->invert);
+        foreach($expected_attr as $k => $v) {
+            $this->assertSame($v, $deinverted->$k);
+        }
+    }
+
+    public function intervalToIsoProvider()
+    {
+        return [
+            [null, null],
+            ];
+    }
+
+    /**
+     * @dataProvider intervalToIsoProvider
+     */
+    public function testIntervalToIso($interval, $iso)
+    {
+        $this->assertSame($iso, DateTimeHelper::intervalToIso($interval));
+    }
+
+    public function intervalToIsoReinitProvider()
+    {
+        return [
+            [new \DateInterval('P1Y')],
+            [new \DateInterval('P1M')],
+            [new \DateInterval('P1D')],
+            [new \DateInterval('PT1H')],
+            [new \DateInterval('PT1M')],
+            [new \DateInterval('PT1S')],
+            [new \DateInterval('P1Y2M3DT4H5M6S')],
+            ];
+    }
+
+    /**
+     * @dataProvider intervalToIsoReinitProvider
+     */
+    public function testIntervalToIsoReinit($interval)
+    {
+        $iso = DateTimeHelper::intervalToIso($interval);
+        $this->assertEquals($interval, new \DateInterval($iso));
+    }
+
+    public function intervalToIsoReinitUnsupportedProvider()
+    {
+        return [
+            [\DateInterval::createFromDateString('-2 years')],
+            [\DateInterval::createFromDateString('-2 months')],
+            [\DateInterval::createFromDateString('-2 days')],
+            [\DateInterval::createFromDateString('-2 hours')],
+            [\DateInterval::createFromDateString('-2 minutes')],
+            [\DateInterval::createFromDateString('-2 seconds')],
+            [(new \DateTime('2016-08-03'))->diff(new \DateTime('2016-07-03'))],
+            [(new \DateTime('2016-08-03 10:00:01'))->diff(new \DateTime('2016-08-03 10:00:00'))],
+            ];
+    }
+
+    /**
+     * @dataProvider intervalToIsoReinitUnsupportedProvider
+     * @expectedException \Exception
+     */
+    public function testIntervalToIsoReinitUnsupported($interval)
+    {
+        DateTimeHelper::intervalToIso($interval);
+    }
 }

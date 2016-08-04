@@ -72,4 +72,39 @@ class DateTimeHelper
             return null;
         }
     }
+
+    public static function deinvertInterval(\DateInterval $source = null)
+    {
+        // \DateInterval does not implement clone.
+        // @see https://bugs.php.net/bug.php?id=50559
+        $result = unserialize(serialize($source));
+        if($result->invert) {
+            $result->y *= -1;
+            $result->m *= -1;
+            $result->d *= -1;
+            $result->h *= -1;
+            $result->i *= -1;
+            $result->s *= -1;
+            $result->invert = 0;
+        }
+        return $result;
+    }
+
+    /**
+     * @param \DateInterval|null $i
+     * @return string|null
+     */
+    public static function intervalToIso(\DateInterval $i = null)
+    {
+        if(is_null($i)) {
+            return null;
+        } else {
+            $i = self::deinvertInterval($i);
+            if($i->y < 0 || $i->m < 0 || $i->d < 0 || $i->h < 0 || $i->i < 0 || $i->s < 0) {
+                throw new \Exception('negative intervals are not supported');
+            } else {
+                return $i->format('P%yY%mM%dDT%hH%iM%sS');
+            }
+        }
+    }
 }

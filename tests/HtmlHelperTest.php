@@ -196,4 +196,51 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected_tag, HtmlHelper::nonVoidTag($name, $content, $attributes));
     }
+
+    public function timeProvider()
+    {
+        return [
+            [null, null, [], null],
+            [null, '04.08.2016', [], '<time>04.08.2016</time>'],
+            [null, function($y) { return is_null($y) ? '2016' : ''; }, [], '<time>2016</time>'],
+            ['2016-08-04', '04.08.2016', [], '<time datetime="2016-08-04">04.08.2016</time>'],
+            ['2016-08-04', '', [], '<time datetime="2016-08-04"></time>'],
+            ['2016', '2016', ['title' => 'year'], '<time datetime="2016" title="year">2016</time>'],
+            ['2016', '2016', ['datetime' => '2014'], '<time datetime="2014">2016</time>'],
+            ['2016', function($y) { return strrev($y); }, [], '<time datetime="2016">6102</time>'],
+            ['2016', function() { return 'year'; }, [], '<time datetime="2016">year</time>'],
+            [
+                new \DateTime('2016-08-04 13:54+08:00'),
+                '2016',
+                [],
+                '<time datetime="2016-08-04T13:54:00+08:00">2016</time>',
+                ],
+            [
+                new \DateTime('2016-08-04 13:54:13Z'),
+                function($dt) { return $dt->format('m.d.Y'); },
+                [],
+                '<time datetime="2016-08-04T13:54:13+00:00">08.04.2016</time>',
+                ],
+            [
+                new \DateTime('2016-08-04 13:54:13Z'),
+                function($dt) { return $dt->format('m.d.Y'); },
+                ['title' => function($dt) { return $dt->format('H:i'); }],
+                '<time datetime="2016-08-04T13:54:13+00:00" title="13:54">08.04.2016</time>',
+                ],
+            [
+                new \DateInterval('P1YT15S'),
+                function($i) { return $i->format('%yy, %ss'); },
+                ['title' => function($i) { return $i->format('%mm'); }],
+                '<time datetime="P1Y0M0DT0H0M15S" title="0m">1y, 15s</time>',
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider timeProvider
+     */
+    public function testTime($dt, $content, $attributes, $expected_tag)
+    {
+        $this->assertSame($expected_tag, HtmlHelper::time($dt, $content, $attributes));
+    }
 }

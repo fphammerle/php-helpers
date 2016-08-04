@@ -81,4 +81,26 @@ class HtmlHelper
             self::endTag($tag_name)
             );
     }
+
+    public static function time($dt, $content, array $attributes = [])
+    {
+        if($dt instanceof \DateTime) {
+            $attr = $dt->format(\DateTime::W3C);
+        } elseif($dt instanceof \DateInterval) {
+            $attr = DateTimeHelper::intervalToIso($dt);
+        } else {
+            $attr = $dt;
+        }
+
+        return self::nonVoidTag(
+            'time',
+            is_callable($content) ? $content($dt) : $content,
+            array_merge(
+                ['datetime' => $attr],
+                ArrayHelper::map($attributes, function($v) use ($dt) {
+                    return is_callable($v) ? $v($dt) : $v;
+                    })
+                )
+            );
+    }
 }
