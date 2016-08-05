@@ -4,7 +4,9 @@ namespace fphammerle\helpers;
 
 class Image
 {
-    protected $resource = null;
+    use \fphammerle\helpers\PropertyAccessTrait;
+
+    protected $_resource = null;
 
     private function __construct()
     {
@@ -35,6 +37,11 @@ class Image
                 throw new \InvalidArgumentException("type of '$path' is not supported");
         }
         return $image;
+    }
+
+    public function getWidth()
+    {
+        return imagesx($this->_resource);
     }
 
     public function getColorAt($x, $y)

@@ -7,6 +7,24 @@ use fphammerle\helpers\colors;
 
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
+    public function getWidthProvider()
+    {
+        return [
+            [__DIR__ . '/data/color.png', 4],
+            [__DIR__ . '/data/chainring.jpg', 1336],
+            ];
+    }
+
+    /**
+     * @dataProvider getWidthProvider
+     */
+    public function testGetWidth($path, $width)
+    {
+        $img = Image::fromFile($path);
+        $this->assertSame($width, $img->getWidth());
+        $this->assertSame($width, $img->width);
+    }
+
     public function getColorAtProvider()
     {
         return [
