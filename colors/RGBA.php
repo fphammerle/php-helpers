@@ -21,7 +21,7 @@ class RGBA extends RGB
 
     /**
      * alpha 0 => 100% transparency
-     * alpha 1 => 0% transparency, opaque
+     * alpha 1 => opaque, 0% transparency
      */
     public function setAlpha($alpha)
     {
