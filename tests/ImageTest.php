@@ -128,41 +128,59 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     public function rotateLeftProvider()
     {
         return [
-            [__DIR__ . '/data/chainring.jpg', __DIR__ . '/data/chainring-rotated-left.jpg'],
+            [
+                __DIR__ . '/data/color.png',
+                [
+                    [0, 3, new colors\RGBA(0, 1, 0, 1)],
+                    [0, 2, new colors\RGBA(0, 0, 1, 1)],
+                    [0, 0, new colors\RGBA(0, 0, 0, 0)],
+                    [1, 3, new colors\RGBA(1, 0, 0, 1)],
+                    [1, 2, new colors\RGBA(0, 0, 0, 1)],
+                    [2, 0, new colors\RGBA(1, 1, 1, 1)],
+                    ],
+                ],
             ];
     }
 
     /**
      * @dataProvider rotateLeftProvider
      */
-    public function testRotateLeft($source_path, $expected_path)
+    public function testRotateLeft($source_path, $expected_pixels)
     {
         $img = Image::fromFile($source_path);
-        $tmp_path = tempnam(sys_get_temp_dir(), 'image');
         $img->rotateLeft();
-        $img->saveJpeg($tmp_path);
-        $this->assertFileEquals($expected_path, $tmp_path);
-        unlink($tmp_path);
+        foreach($expected_pixels as $px) {
+            $this->assertTrue($px[2]->equals($img->getColorAt($px[0], $px[1])));
+        }
     }
 
     public function rotateRightProvider()
     {
         return [
-            [__DIR__ . '/data/chainring.jpg', __DIR__ . '/data/chainring-rotated-right.jpg'],
+            [
+                __DIR__ . '/data/color.png',
+                [
+                    [2, 0, new colors\RGBA(0, 1, 0, 1)],
+                    [2, 1, new colors\RGBA(0, 0, 1, 1)],
+                    [2, 3, new colors\RGBA(0, 0, 0, 0)],
+                    [1, 0, new colors\RGBA(1, 0, 0, 1)],
+                    [1, 1, new colors\RGBA(0, 0, 0, 1)],
+                    [0, 3, new colors\RGBA(1, 1, 1, 1)],
+                    ],
+                ],
             ];
     }
 
     /**
      * @dataProvider rotateRightProvider
      */
-    public function testRotateRight($source_path, $expected_path)
+    public function testRotateRight($source_path, $expected_pixels)
     {
         $img = Image::fromFile($source_path);
-        $tmp_path = tempnam(sys_get_temp_dir(), 'image');
         $img->rotateRight();
-        $img->saveJpeg($tmp_path);
-        $this->assertFileEquals($expected_path, $tmp_path);
-        unlink($tmp_path);
+        foreach($expected_pixels as $px) {
+            $this->assertTrue($px[2]->equals($img->getColorAt($px[0], $px[1])));
+        }
     }
 
     public function testSaveJpeg()
