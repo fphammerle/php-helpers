@@ -19,6 +19,10 @@ class RGBA extends RGB
         return $this->_alpha;
     }
 
+    /**
+     * alpha 0 => 100% transparency
+     * alpha 1 => 0% transparency, opaque
+     */
     public function setAlpha($alpha)
     {
         $alpha = (float)$alpha;

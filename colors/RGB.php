@@ -42,7 +42,9 @@ class RGB
     {
         $green = (float)$green;
         if($green < 0 || $green > 1) {
-            throw new \UnexpectedValueException('value must be within [0, 1]');
+            throw new \UnexpectedValueException(
+                sprintf('value must be within [0, 1], %f given', $green)
+                );
         }
         $this->_green = $green;
     }

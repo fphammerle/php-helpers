@@ -3,9 +3,38 @@
 namespace fphammerle\helpers\tests;
 
 use fphammerle\helpers\Image;
+use fphammerle\helpers\colors;
 
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
+    public function getColorAtProvider()
+    {
+        return [
+            [__DIR__ . '/data/color.png', 0, 0, new colors\RGBA(0,   1,   0,   1      )],
+            [__DIR__ . '/data/color.png', 1, 0, new colors\RGBA(0,   0,   1,   1      )],
+            [__DIR__ . '/data/color.png', 1, 1, new colors\RGBA(0,   0,   0,   1      )],
+            [__DIR__ . '/data/color.png', 0, 1, new colors\RGBA(1,   0,   0,   1      )],
+            [__DIR__ . '/data/color.png', 0, 2, new colors\RGBA(1,   0.2, 0,   1      )],
+            [__DIR__ . '/data/color.png', 1, 2, new colors\RGBA(0,   1,   0.2, 1      )],
+            [__DIR__ . '/data/color.png', 2, 2, new colors\RGBA(0.2, 0,   1,   1      )],
+            [__DIR__ . '/data/color.png', 3, 2, new colors\RGBA(1,   1,   1,   1      )],
+            [__DIR__ . '/data/color.png', 2, 0, new colors\RGBA(0.2, 0.4, 1,   1      )],
+            [__DIR__ . '/data/color.png', 2, 1, new colors\RGBA(0.2, 0.4, 1,   102/127)],
+            [__DIR__ . '/data/color.png', 3, 1, new colors\RGBA(1,   0.8, 0.2, 102/127)],
+            [__DIR__ . '/data/color.png', 3, 0, new colors\RGBA(0,   0,   0,   0      )],
+            ];
+    }
+
+    /**
+     * @dataProvider getColorAtProvider
+     */
+    public function testGetColorAt($path, $x, $y, $e)
+    {
+        $img = Image::fromFile($path);
+        $r = $img->getColorAt($x, $y);
+        $this->assertTrue($e->equals($r), print_r($r->tuple, true));
+    }
+
     public function rotateProvider()
     {
         return [

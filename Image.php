@@ -23,14 +23,32 @@ class Image
      */
     public static function fromFile($path)
     {
+        $image = new self;
         switch(exif_imagetype($path)) {
             case IMAGETYPE_JPEG:
-                $image = new self;
                 $image->_resource = imagecreatefromjpeg($path);
-                return $image;
+                break;
+            case IMAGETYPE_PNG:
+                $image->_resource = imagecreatefrompng($path);
+                break;
             default:
                 throw new \InvalidArgumentException("type of '$path' is not supported");
         }
+        return $image;
+    }
+
+    public function getColorAt($x, $y)
+    {
+        $colors = imagecolorsforindex(
+            $this->_resource,
+            imagecolorat($this->_resource, $x, $y)
+            );
+        return new \fphammerle\helpers\colors\RGBA(
+            $colors['red'] / 0xFF,
+            $colors['green'] / 0xFF,
+            $colors['blue'] / 0xFF,
+            1 - $colors['alpha'] / 127
+            );
     }
 
     /**
