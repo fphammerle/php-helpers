@@ -107,4 +107,58 @@ class DateTimeHelper
             }
         }
     }
+
+    /**
+     * @param \DatePeriod|null $p
+     * @return string|null
+     */
+    public static function periodToIso(\DatePeriod $p = null)
+    {
+        if(is_null($p)) {
+            return null;
+        } else {
+            // Cave:
+            // (new \DatePeriod(
+            //      new \DateTime('2016-08-05T14:50:14Z'),
+            //      new \DateInterval('P1D'),
+            //      -1
+            //      )->recurrences == 1
+            if($p->recurrences <= 0) {
+                throw new \Exception(
+                    'conversion of periods with number of occurances'
+                      . ' being negative is not supported'
+                    );
+            }
+            $repetitions = -1;
+            foreach($p as $dt) {
+                $repetitions++;
+                // printf("%d. %s\n", $repetitions, $dt->format(\DateTime::ATOM));
+            }
+            switch($repetitions) {
+                case -1:
+                    // no valid date within period
+                    // e.g. new \DatePeriod(
+                    //     new \DateTime('2016-08-05T14:50:14+08:00'),
+                    //     new \DateInterval('PT1S'),
+                    //     new \DateTime('2016-08-05T14:50:14+08:00')
+                    //     )
+                    throw new \InvalidArgumentException(
+                        'given period does not contain any valid date'
+                        );
+                case 0:
+                    return sprintf(
+                        '%s/%s',
+                        $p->getStartDate()->format(\DateTime::ATOM),
+                        self::intervalToIso($p->getDateInterval())
+                        );
+                default:
+                    return sprintf(
+                        'R%d/%s/%s',
+                        $repetitions,
+                        $p->getStartDate()->format(\DateTime::ATOM),
+                        self::intervalToIso($p->getDateInterval())
+                        );
+            }
+        }
+    }
 }

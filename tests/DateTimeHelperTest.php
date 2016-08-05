@@ -308,4 +308,67 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         DateTimeHelper::intervalToIso($interval);
     }
+
+    public function periodToIsoProvider()
+    {
+        return [
+            [null, null],
+            [
+                new \DatePeriod(
+                    new \DateTime('2016-08-05T14:50:14+08:00'),
+                    new \DateInterval('P1D'),
+                    new \DateTime('2016-08-10T14:50:14+08:00')
+                    ),
+                'R4/2016-08-05T14:50:14+08:00/P0Y0M1DT0H0M0S',
+                ],
+            [
+                new \DatePeriod(
+                    new \DateTime('2016-08-05T14:50:14+08:00'),
+                    new \DateInterval('P5D'),
+                    new \DateTime('2016-08-10T14:50:14+08:00')
+                    ),
+                '2016-08-05T14:50:14+08:00/P0Y0M5DT0H0M0S',
+                ],
+            [
+                new \DatePeriod(
+                    new \DateTime('2016-08-05T14:50:14+08:00'),
+                    new \DateInterval('P1Y2M3DT4H5M6S'),
+                    new \DateTime('2017-10-08T18:55:20+08:00')
+                    ),
+                '2016-08-05T14:50:14+08:00/P1Y2M3DT4H5M6S',
+                ],
+            [
+                new \DatePeriod(
+                    new \DateTime('2016-08-05T14:50:14Z'),
+                    new \DateInterval('P1D'),
+                    0
+                    ),
+                '2016-08-05T14:50:14+00:00/P0Y0M1DT0H0M0S',
+                ],
+            [
+                new \DatePeriod(
+                    new \DateTime('2016-08-05T14:50:14Z'),
+                    new \DateInterval('PT5M'),
+                    3
+                    ),
+                'R3/2016-08-05T14:50:14+00:00/P0Y0M0DT0H5M0S',
+                ],
+            [
+                new \DatePeriod('R3/2016-08-05T14:50:14Z/PT5M'),
+                'R3/2016-08-05T14:50:14+00:00/P0Y0M0DT0H5M0S',
+                ],
+            [
+                new \DatePeriod('R4/2016-08-05T14:50:14Z/P1Y2M3DT4H5M6S'),
+                'R4/2016-08-05T14:50:14+00:00/P1Y2M3DT4H5M6S',
+                ],
+            ];
+    }
+
+    /**
+     * @dataProvider periodToIsoProvider
+     */
+    public function testPeriodToIso($period, $iso)
+    {
+        $this->assertSame($iso, DateTimeHelper::periodToIso($period));
+    }
 }
