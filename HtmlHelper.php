@@ -30,7 +30,7 @@ class HtmlHelper
         if($tag_name === null) {
             return null;
         } elseif(!is_string($tag_name)) {
-            throw new \TypeError(
+            throw new \InvalidArgumentException(
                 sprintf('expected string or null as tag name, %s given', gettype($tag_name))
                 );
         } else {
@@ -47,7 +47,7 @@ class HtmlHelper
         if($tag_name === null) {
             return null;
         } elseif(!is_string($tag_name)) {
-            throw new \TypeError(
+            throw new \InvalidArgumentException(
                 sprintf('expected string or null as tag name, %s given', gettype($tag_name))
                 );
         } else {
@@ -64,7 +64,7 @@ class HtmlHelper
         if($name === null) {
             return null;
         } elseif(!is_string($name)) {
-            throw new \TypeError(
+            throw new \InvalidArgumentException(
                 sprintf('expected string or null as name, %s given', gettype($name))
                 );
         } else {

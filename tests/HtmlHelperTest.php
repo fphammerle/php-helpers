@@ -26,21 +26,19 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, HtmlHelper::encode($string));
     }
 
-    public function voidTagTypeErrorProvider()
+    public function voidTagInvalidArgumentProvider()
     {
         return [
             [1, []],
             [false, []],
-            ['tag', true],
-            ['tag', 'attr'],
             ];
     }
 
     /**
-     * @dataProvider voidTagTypeErrorProvider
-     * @expectedException \TypeError
+     * @dataProvider voidTagInvalidArgumentProvider
+     * @expectedException \InvalidArgumentException
      */
-    public function testVoidTagTypeError($name, $attributes)
+    public function testVoidTagInvalidArgument($name, $attributes)
     {
         HtmlHelper::voidTag($name, $attributes);
     }
@@ -80,21 +78,19 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('<tag />', HtmlHelper::voidTag('tag'));
     }
 
-    public function startTagTypeErrorProvider()
+    public function startTagInvalidArgumentProvider()
     {
         return [
             [1, []],
             [false, []],
-            ['tag', true],
-            ['tag', 'attr'],
             ];
     }
 
     /**
-     * @dataProvider startTagTypeErrorProvider
-     * @expectedException \TypeError
+     * @dataProvider startTagInvalidArgumentProvider
+     * @expectedException \InvalidArgumentException
      */
-    public function testStartTagTypeError($name, $attributes)
+    public function testStartTagInvalidArgument($name, $attributes)
     {
         HtmlHelper::startTag($name, $attributes);
     }
@@ -134,7 +130,7 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('<tag>', HtmlHelper::startTag('tag'));
     }
 
-    public function endTagTypeErrorProvider()
+    public function endTagInvalidArgumentProvider()
     {
         return [
             [1],
@@ -143,10 +139,10 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider endTagTypeErrorProvider
-     * @expectedException \TypeError
+     * @dataProvider endTagInvalidArgumentProvider
+     * @expectedException \InvalidArgumentException
      */
-    public function testEndTagTypeError($name)
+    public function testEndTagInvalidArgument($name)
     {
         HtmlHelper::endTag($name);
     }
