@@ -59,14 +59,17 @@ class Image
     }
 
     /**
-     * @param float $angle
+     * @param float $angle anticlockwise
      * @return void
      */
     public function rotate($angle)
     {
-        $resource = imagerotate($this->_resource, $angle, 0);
-        imagedestroy($this->_resource);
-        $this->_resource = $resource;
+        $angle = fmod($angle, 360);
+        if(abs($angle) > 1e-10) {
+            $resource = imagerotate($this->_resource, $angle, 0);
+            imagedestroy($this->_resource);
+            $this->_resource = $resource;
+        }
     }
 
     /**
