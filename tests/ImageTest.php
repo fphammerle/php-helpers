@@ -201,12 +201,24 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSaveJpeg()
+    public function saveJpegProvider()
     {
-        $img = Image::fromFile(__DIR__ . '/data/chainring.jpg');
+        return [
+            [__DIR__ . '/data/chainring.jpg'],
+            [__DIR__ . '/data/color.png'],
+            ];
+    }
+
+    /**
+     * @dataProvider saveJpegProvider
+     */
+    public function testSaveJpeg($source_path)
+    {
+        $img = Image::fromFile($source_path);
         $tmp_path = tempnam(sys_get_temp_dir(), 'image');
         $img->saveJpeg($tmp_path);
-        $this->assertFileEquals(__DIR__ . '/data/chainring-saved.jpg', $tmp_path);
+        $this->assertSame(IMAGETYPE_JPEG, exif_imagetype($tmp_path));
+        $this->assertSame($img->width, Image::fromFile($tmp_path)->width);
         unlink($tmp_path);
     }
 }
