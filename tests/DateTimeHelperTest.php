@@ -58,8 +58,19 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             // null
             [null, 'UTC', null],
             [null, 'US/Pacific', null],
+            // year without timezone
+            ['1900', 'UTC',           new DP(new DT('1900-01-01T00:00:00Z'),      new DI('P1Y'), 0)],
+            ['0014', 'Europe/Vienna', new DP(new DT('0014-01-01T00:00:00+01:00'), new DI('P1Y'), 0)],
+            ['2016', 'US/Pacific',    new DP(new DT('2016-01-01T00:00:00-08:00'), new DI('P1Y'), 0)],
+            // year with timezone
+            ['1900Z',       'US/Pacific',    new DP(new DT('1900-01-01T00:00:00Z'),      new DI('P1Y'), 0)],
+            ['2016Z',       'Europe/Vienna', new DP(new DT('2016-01-01T00:00:00Z'),      new DI('P1Y'), 0)],
+            ['2016+00:00',  'Europe/Vienna', new DP(new DT('2016-01-01T00:00:00Z'),      new DI('P1Y'), 0)],
+            ['2016+02:00',  'US/Pacific',    new DP(new DT('2016-01-01T00:00:00+02:00'), new DI('P1Y'), 0)],
+            ['0000 +02:05', 'US/Pacific',    new DP(new DT('0000-01-01T00:00:00+02:05'), new DI('P1Y'), 0)],
+            ['2016-08:00',  'UTC',           new DP(new DT('2016-01-01T00:00:00-08:00'), new DI('P1Y'), 0)],
+            ['2016 -08:00', 'UTC',           new DP(new DT('2016-01-01T00:00:00-08:00'), new DI('P1Y'), 0)],
             // month without timezone
-            ['2016-08', 'UTC',           new DP(new DT('2016-08-01T00:00:00Z'),      new DI('P1M'), 0)],
             ['2016-08', 'UTC',           new DP(new DT('2016-08-01T00:00:00Z'),      new DI('P1M'), 0)],
             ['2016-08', 'Europe/Vienna', new DP(new DT('2016-08-01T00:00:00+02:00'), new DI('P1M'), 0)],
             ['2016-01', 'US/Pacific',    new DP(new DT('2016-01-01T00:00:00-08:00'), new DI('P1M'), 0)],
@@ -72,7 +83,6 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016-01 -08:00', 'UTC',           new DP(new DT('2016-01-01T00:00:00-08:00'), new DI('P1M'), 0)],
             // date without timezone
             ['2016-08-02', 'UTC',           new DP(new DT('2016-08-02T00:00:00Z'),      new DI('P1D'), 0)],
-            ['2016-08-02', 'UTC',           new DP(new DT('2016-08-02T00:00:00Z'),      new DI('P1D'), 0)],
             ['2016-08-02', 'Europe/Vienna', new DP(new DT('2016-08-02T00:00:00+02:00'), new DI('P1D'), 0)],
             ['2016-01-02', 'US/Pacific',    new DP(new DT('2016-01-02T00:00:00-08:00'), new DI('P1D'), 0)],
             // date with timezone
@@ -80,7 +90,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016-08-02Z',      'Europe/Vienna', new DP(new DT('2016-08-02T00:00:00Z'),      new DI('P1D'), 0)],
             ['2016-01-02+00:00', 'Europe/Vienna', new DP(new DT('2016-01-02T00:00:00Z'),      new DI('P1D'), 0)],
             ['2016-01-02+02:00', 'US/Pacific',    new DP(new DT('2016-01-02T00:00:00+02:00'), new DI('P1D'), 0)],
-            ['2016-01-02-08:00', 'UTC',           new DP(new DT('2016-01-02T00:00:00-08:00'), new DI('P1D'), 0)],
+            ['2016-01-02-08:13', 'UTC',           new DP(new DT('2016-01-02T00:00:00-08:13'), new DI('P1D'), 0)],
             // minute without timezone
             ['2016-08-02 15:52', 'UTC',           new DP(new DT('2016-08-02T15:52:00Z'),      new DI('PT1M'), 0)],
             ['2016-08-02T15:52', 'UTC',           new DP(new DT('2016-08-02T15:52:00Z'),      new DI('PT1M'), 0)],

@@ -4,7 +4,7 @@ namespace fphammerle\helpers;
 
 class DateTimeHelper
 {
-    const _timezone_iso_pattern = '(Z|[\+-]\d{2}.\d{2})';
+    const _timezone_iso_pattern = '(?P<tz>Z|[\+-]\d{2}.\d{2})';
 
     /**
      * @param integer|null $timestamp unix timestamp
@@ -32,13 +32,9 @@ class DateTimeHelper
         if($text === null) {
             return null;
         } else {
-            if(preg_match('/^\d{4}-(?P<m>\d{2})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
-                $start = new \DateTime($text);
-                $interval = new \DateInterval('P1M');
-                return new \DatePeriod($start, $interval, 0);
-            } elseif(preg_match(
-                    '/^(?P<y>\d{4})-(?P<m>\d{2})(-(?P<d>\d{2})'
-                        .'([ T](?P<h>\d{2}):(?P<i>\d{2})(:(?P<s>\d{2}))?)?)?'
+            if(preg_match(
+                    '/^(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})'
+                        .'([ T](?P<h>\d{2}):(?P<i>\d{2})(:(?P<s>\d{2}))?)?'
                         . '(' . self::_timezone_iso_pattern . ')?$/',
                     $text,
                     $attr
@@ -52,6 +48,22 @@ class DateTimeHelper
                     $interval = new \DateInterval('P1D');
                 }
                 return new \DatePeriod($start, $interval, 0);
+            } elseif(preg_match('/^\d{4}-(?P<m>\d{2})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
+                return new \DatePeriod(
+                    new \DateTime($text),
+                    new \DateInterval('P1M'),
+                    0
+                    );
+            } elseif(preg_match('/^(?P<y>\d{4})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
+                return new \DatePeriod(
+                    new \DateTime(sprintf(
+                        '%s-01-01 %s',
+                        $attr['y'],
+                        isset($attr['tz']) ? $attr['tz'] : ''
+                        )),
+                    new \DateInterval('P1Y'),
+                    0
+                    );
             } else {
                 throw new \InvalidArgumentException(
                     sprintf("could not parse string '%s'", $text)
