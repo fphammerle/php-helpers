@@ -107,7 +107,7 @@ class DateTimeHelper
      * @param \DateInterval|null $i
      * @return string|null
      */
-    public static function intervalToIso(\DateInterval $i = null)
+    public static function iso(\DateInterval $i = null)
     {
         if(is_null($i)) {
             return null;
@@ -156,7 +156,7 @@ class DateTimeHelper
             // \DatePeriod::getDateInterval() is available from php 5.6.5.
             // \DatePeriod::$interval returned an invalid \DatePeriod instance
             // in php 7.0.8
-            $interval_iso = self::intervalToIso(get_object_vars($p)['interval']);
+            $interval_iso = self::iso(get_object_vars($p)['interval']);
             switch($repetitions) {
                 case -1:
                     // no valid date within period

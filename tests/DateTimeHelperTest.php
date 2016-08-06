@@ -313,7 +313,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function intervalToIsoProvider()
+    public function isoProvider()
     {
         return [
             [null, null],
@@ -321,14 +321,14 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider intervalToIsoProvider
+     * @dataProvider isoProvider
      */
-    public function testIntervalToIso($interval, $iso)
+    public function testIso($interval, $iso)
     {
-        $this->assertSame($iso, DateTimeHelper::intervalToIso($interval));
+        $this->assertSame($iso, DateTimeHelper::iso($interval));
     }
 
-    public function intervalToIsoReinitProvider()
+    public function isoReinitIntervalProvider()
     {
         return [
             [new DI('P1Y')],
@@ -342,15 +342,15 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider intervalToIsoReinitProvider
+     * @dataProvider isoReinitIntervalProvider
      */
-    public function testIntervalToIsoReinit($interval)
+    public function testIsoReinitInterval($interval)
     {
-        $iso = DateTimeHelper::intervalToIso($interval);
+        $iso = DateTimeHelper::iso($interval);
         $this->assertEquals($interval, new DI($iso));
     }
 
-    public function intervalToIsoReinitUnsupportedProvider()
+    public function isoUnsupportedProvider()
     {
         return [
             [DI::createFromDateString('-2 years')],
@@ -365,12 +365,12 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider intervalToIsoReinitUnsupportedProvider
+     * @dataProvider isoUnsupportedProvider
      * @expectedException \Exception
      */
-    public function testIntervalToIsoReinitUnsupported($interval)
+    public function testIsoUnsupported($interval)
     {
-        DateTimeHelper::intervalToIso($interval);
+        DateTimeHelper::iso($interval);
     }
 
     public function periodToIsoProvider()

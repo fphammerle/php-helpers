@@ -87,7 +87,7 @@ class HtmlHelper
         if($dt instanceof \DateTime) {
             $attr = $dt->format(\DateTime::W3C);
         } elseif($dt instanceof \DateInterval) {
-            $attr = DateTimeHelper::intervalToIso($dt);
+            $attr = DateTimeHelper::iso($dt);
         } else {
             $attr = $dt;
         }
