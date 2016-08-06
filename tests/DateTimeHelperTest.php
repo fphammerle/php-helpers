@@ -64,16 +64,28 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016-08-02',       'US/Pacific', new DP(new DT('2016-08-02T07:00:00Z'),      new DI('P1D'), 0)],
             ['2016-08-02+02:00', 'UTC',        new DP(new DT('2016-08-02T00:00:00+02:00'), new DI('P1D'), 0)],
             ['2016-08-02+02:00', 'UTC',        new DP(new DT('2016-08-01T22:00:00Z'),      new DI('P1D'), 0)],
-            // second
-            ['2016-08-02 15:52:13',       'UTC',           new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
-            ['2016-08-02 15:52:13',       'Europe/Vienna', new DP(new DT('2016-08-02T15:52:13+02:00'), new DI('PT1S'), 0)],
-            ['2016-08-02 15:52:13',       'Europe/Vienna', new DP(new DT('2016-08-02T13:52:13Z'),      new DI('PT1S'), 0)],
-            ['2016-08-02T15:52:13',       'US/Pacific',    new DP(new DT('2016-08-02T15:52:13-07:00'), new DI('PT1S'), 0)],
-            ['2016-08-02T15:52:13Z',      'US/Pacific',    new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
-            ['2016-08-02T15:52:13Z',      'Europe/Vienna', new DP(new DT('2016-08-02T17:52:13+02:00'), new DI('PT1S'), 0)],
-            ['2016-08-02T15:52:13+00:00', 'Europe/Vienna', new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
-            ['2016-08-02T15:52:13+02:00', 'US/Pacific',    new DP(new DT('2016-08-02T15:52:13+02:00'), new DI('PT1S'), 0)],
-            ['2016-08-02T15:52:13-08:00', 'UTC',           new DP(new DT('2016-08-02T23:52:13Z'),      new DI('PT1S'), 0)],
+            // minute without timezone
+            ['2016-08-02 15:52', 'UTC',           new DP(new DT('2016-08-02T15:52:00Z'),      new DI('PT1M'), 0)],
+            ['2016-08-02T15:52', 'UTC',           new DP(new DT('2016-08-02T15:52:00Z'),      new DI('PT1M'), 0)],
+            ['2016-08-02T15:52', 'Europe/Vienna', new DP(new DT('2016-08-02T15:52:00+02:00'), new DI('PT1M'), 0)],
+            ['2016-01-02T15:52', 'US/Pacific',    new DP(new DT('2016-01-02T15:52:00-08:00'), new DI('PT1M'), 0)],
+            // minute with timezone
+            ['2016-08-02 15:52Z',      'US/Pacific',    new DP(new DT('2016-08-02T15:52:00Z'),      new DI('PT1M'), 0)],
+            ['2016-08-02T15:52Z',      'Europe/Vienna', new DP(new DT('2016-08-02T15:52:00Z'),      new DI('PT1M'), 0)],
+            ['2016-01-02T15:52+00:00', 'Europe/Vienna', new DP(new DT('2016-01-02T15:52:00Z'),      new DI('PT1M'), 0)],
+            ['2016-01-02T15:52+02:00', 'US/Pacific',    new DP(new DT('2016-01-02T15:52:00+02:00'), new DI('PT1M'), 0)],
+            ['2016-01-02T15:52-08:00', 'UTC',           new DP(new DT('2016-01-02T15:52:00-08:00'), new DI('PT1M'), 0)],
+            // second without timezone
+            ['2016-08-02 15:52:13', 'UTC',           new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13', 'UTC',           new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13', 'Europe/Vienna', new DP(new DT('2016-08-02T15:52:13+02:00'), new DI('PT1S'), 0)],
+            ['2016-01-02T15:52:00', 'US/Pacific',    new DP(new DT('2016-01-02T15:52:00-08:00'), new DI('PT1S'), 0)],
+            // second with timezone
+            ['2016-08-02 15:52:13Z',      'US/Pacific',    new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13Z',      'Europe/Vienna', new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-01-02T15:52:13+00:00', 'Europe/Vienna', new DP(new DT('2016-01-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-01-02T15:52:13+02:00', 'US/Pacific',    new DP(new DT('2016-01-02T15:52:13+02:00'), new DI('PT1S'), 0)],
+            ['2016-01-02T15:52:13-08:00', 'UTC',           new DP(new DT('2016-01-02T15:52:13-08:00'), new DI('PT1S'), 0)],
             ];
     }
 
