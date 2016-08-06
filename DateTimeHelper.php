@@ -49,9 +49,7 @@ class DateTimeHelper
                 } else {
                     $interval = new \DateInterval('P1D');
                 }
-                $end = clone $start;
-                $end->add($interval);
-                return new \DatePeriod($start, $interval, $end);
+                return new \DatePeriod($start, $interval, 0);
             } else {
                 throw new \InvalidArgumentException(
                     sprintf("could not parse string '%s'", $text)

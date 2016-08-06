@@ -59,74 +59,74 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016-08-02', 'UTC', new \DatePeriod(
                 new \DateTime('2016-08-02T00:00:00Z'),
                 new \DateInterval('P1D'),
-                new \DateTime('2016-08-03T00:00:00Z')
+                0
                 )],
             ['2016-08-02', 'Europe/Vienna', new \DatePeriod(
                 new \DateTime('2016-08-02T00:00:00+02:00'),
                 new \DateInterval('P1D'),
-                new \DateTime('2016-08-03T00:00:00+02:00')
+                0
                 )],
             ['2016-08-02', 'Europe/Vienna', new \DatePeriod(
                 new \DateTime('2016-08-01T22:00:00Z'),
                 new \DateInterval('P1D'),
-                new \DateTime('2016-08-02T22:00:00Z')
+                0
                 )],
             ['2016-08-02+02:00', 'UTC', new \DatePeriod(
-                 new \DateTime('2016-08-02T00:00:00+02:00'),
-                 new \DateInterval('P1D'),
-                 new \DateTime('2016-08-03T00:00:00+02:00')
-                 )],
+                new \DateTime('2016-08-02T00:00:00+02:00'),
+                new \DateInterval('P1D'),
+                0
+                )],
             ['2016-08-02+02:00', 'UTC', new \DatePeriod(
-                 new \DateTime('2016-08-01T22:00:00Z'),
-                 new \DateInterval('P1D'),
-                 new \DateTime('2016-08-02T22:00:00Z')
-                 )],
+                new \DateTime('2016-08-01T22:00:00Z'),
+                new \DateInterval('P1D'),
+                0
+                )],
             // second
             ['2016-08-02 15:52:13', 'UTC', new \DatePeriod(
-                 new \DateTime('2016-08-02T15:52:13Z'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T15:52:14Z')
-                 )],
+                new \DateTime('2016-08-02T15:52:13Z'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02 15:52:13', 'Europe/Vienna', new \DatePeriod(
-                 new \DateTime('2016-08-02T15:52:13+02:00'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T15:52:14+02:00')
-                 )],
+                new \DateTime('2016-08-02T15:52:13+02:00'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02 15:52:13', 'Europe/Vienna', new \DatePeriod(
-                 new \DateTime('2016-08-02T13:52:13Z'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T13:52:14Z')
-                 )],
+                new \DateTime('2016-08-02T13:52:13Z'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02T15:52:13', 'US/Pacific', new \DatePeriod(
-                 new \DateTime('2016-08-02T15:52:13-07:00'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T15:52:14-07:00')
-                 )],
+                new \DateTime('2016-08-02T15:52:13-07:00'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02T15:52:13Z', 'US/Pacific', new \DatePeriod(
-                 new \DateTime('2016-08-02T15:52:13Z'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T15:52:14Z')
-                 )],
+                new \DateTime('2016-08-02T15:52:13Z'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02T15:52:13Z', 'Europe/Vienna', new \DatePeriod(
-                 new \DateTime('2016-08-02T17:52:13+02:00'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T14:52:14-01:00')
-                 )],
+                new \DateTime('2016-08-02T17:52:13+02:00'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02T15:52:13+00:00', 'Europe/Vienna', new \DatePeriod(
-                 new \DateTime('2016-08-02T15:52:13Z'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T15:52:14Z')
-                 )],
+                new \DateTime('2016-08-02T15:52:13Z'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02T15:52:13+02:00', 'US/Pacific', new \DatePeriod(
-                 new \DateTime('2016-08-02T15:52:13+02:00'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-02T15:52:14+02:00')
-                 )],
+                new \DateTime('2016-08-02T15:52:13+02:00'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ['2016-08-02T15:52:13-08:00', 'UTC', new \DatePeriod(
-                 new \DateTime('2016-08-02T23:52:13Z'),
-                 new \DateInterval('PT1S'),
-                 new \DateTime('2016-08-03T01:52:14+02:00')
-                 )],
+                new \DateTime('2016-08-02T23:52:13Z'),
+                new \DateInterval('PT1S'),
+                0
+                )],
             ];
     }
 
