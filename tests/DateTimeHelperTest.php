@@ -52,8 +52,10 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     public function parseProvider()
     {
         return [
+            // null
             [null, 'UTC', null],
             [null, 'US/Pacific', null],
+            // date
             ['2016-08-02', 'UTC', new \DatePeriod(
                 new \DateTime('2016-08-02T00:00:00Z'),
                 new \DateInterval('P1D'),
@@ -69,6 +71,17 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
                 new \DateInterval('P1D'),
                 new \DateTime('2016-08-02T22:00:00Z')
                 )],
+            ['2016-08-02+02:00', 'UTC', new \DatePeriod(
+                 new \DateTime('2016-08-02T00:00:00+02:00'),
+                 new \DateInterval('P1D'),
+                 new \DateTime('2016-08-03T00:00:00+02:00')
+                 )],
+            ['2016-08-02+02:00', 'UTC', new \DatePeriod(
+                 new \DateTime('2016-08-01T22:00:00Z'),
+                 new \DateInterval('P1D'),
+                 new \DateTime('2016-08-02T22:00:00Z')
+                 )],
+            // second
             ['2016-08-02 15:52:13', 'UTC', new \DatePeriod(
                  new \DateTime('2016-08-02T15:52:13Z'),
                  new \DateInterval('PT1S'),
@@ -88,6 +101,31 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
                  new \DateTime('2016-08-02T15:52:13-07:00'),
                  new \DateInterval('PT1S'),
                  new \DateTime('2016-08-02T15:52:14-07:00')
+                 )],
+            ['2016-08-02T15:52:13Z', 'US/Pacific', new \DatePeriod(
+                 new \DateTime('2016-08-02T15:52:13Z'),
+                 new \DateInterval('PT1S'),
+                 new \DateTime('2016-08-02T15:52:14Z')
+                 )],
+            ['2016-08-02T15:52:13Z', 'Europe/Vienna', new \DatePeriod(
+                 new \DateTime('2016-08-02T17:52:13+02:00'),
+                 new \DateInterval('PT1S'),
+                 new \DateTime('2016-08-02T14:52:14-01:00')
+                 )],
+            ['2016-08-02T15:52:13+00:00', 'Europe/Vienna', new \DatePeriod(
+                 new \DateTime('2016-08-02T15:52:13Z'),
+                 new \DateInterval('PT1S'),
+                 new \DateTime('2016-08-02T15:52:14Z')
+                 )],
+            ['2016-08-02T15:52:13+02:00', 'US/Pacific', new \DatePeriod(
+                 new \DateTime('2016-08-02T15:52:13+02:00'),
+                 new \DateInterval('PT1S'),
+                 new \DateTime('2016-08-02T15:52:14+02:00')
+                 )],
+            ['2016-08-02T15:52:13-08:00', 'UTC', new \DatePeriod(
+                 new \DateTime('2016-08-02T23:52:13Z'),
+                 new \DateInterval('PT1S'),
+                 new \DateTime('2016-08-03T01:52:14+02:00')
                  )],
             ];
     }
@@ -360,6 +398,18 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             [
                 new \DatePeriod('R4/2016-08-05T14:50:14Z/P1Y2M3DT4H5M6S'),
                 'R4/2016-08-05T14:50:14+00:00/P1Y2M3DT4H5M6S',
+                ],
+            [
+                DateTimeHelper::parse('2016-08-05T14:50:14Z'),
+                '2016-08-05T14:50:14+00:00/P0Y0M0DT0H0M1S',
+                ],
+            [
+                DateTimeHelper::parse('2016-08-05Z'),
+                '2016-08-05T00:00:00+00:00/P0Y0M1DT0H0M0S',
+                ],
+            [
+                DateTimeHelper::parse('2016-08-05-03:00'),
+                '2016-08-05T00:00:00-03:00/P0Y0M1DT0H0M0S',
                 ],
             ];
     }

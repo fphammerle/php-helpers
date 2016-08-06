@@ -32,18 +32,19 @@ class DateTimeHelper
         } else {
             if(preg_match(
                     '/^(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})'
-                        .'([ T](?P<h>\d{2}):(?P<i>\d{2}):(?P<s>\d{2}))?$/',
+                        .'([ T](?P<h>\d{2}):(?P<i>\d{2}):(?P<s>\d{2}))?'
+                        . '(Z|[\+-]\d{2}:\d{2})?$/',
                     $text,
                     $attr
                     )) {
-                $start = new \DateTime();
+                $start = new \DateTime($attr[0]);
                 $start->setDate($attr['y'], $attr['m'], $attr['d']);
                 $start->setTime(
-                    isset($attr['h']) ? $attr['h'] : 0,
-                    isset($attr['i']) ? $attr['i'] : 0,
-                    isset($attr['s']) ? $attr['s'] : 0
+                    empty($attr['h']) ? 0 : $attr['h'],
+                    empty($attr['i']) ? 0 : $attr['i'],
+                    empty($attr['s']) ? 0 : $attr['s']
                     );
-                if(isset($attr['h'])) {
+                if(!empty($attr['h'])) {
                     $interval = new \DateInterval('PT1S');
                 } else {
                     $interval = new \DateInterval('P1D');
