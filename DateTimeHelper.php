@@ -4,6 +4,8 @@ namespace fphammerle\helpers;
 
 class DateTimeHelper
 {
+    const _timezone_iso_pattern = '(Z|[\+-]\d{2}.\d{2})';
+
     /**
      * @param integer|null $timestamp unix timestamp
      * @return \DateTime|null
@@ -30,10 +32,14 @@ class DateTimeHelper
         if($text === null) {
             return null;
         } else {
-            if(preg_match(
-                    '/^(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})'
-                        .'([ T](?P<h>\d{2}):(?P<i>\d{2})(:(?P<s>\d{2}))?)?'
-                        . '(Z|[\+-]\d{2}:\d{2})?$/',
+            if(preg_match('/^\d{4}-(?P<m>\d{2})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
+                $start = new \DateTime($text);
+                $interval = new \DateInterval('P1M');
+                return new \DatePeriod($start, $interval, 0);
+            } elseif(preg_match(
+                    '/^(?P<y>\d{4})-(?P<m>\d{2})(-(?P<d>\d{2})'
+                        .'([ T](?P<h>\d{2}):(?P<i>\d{2})(:(?P<s>\d{2}))?)?)?'
+                        . '(' . self::_timezone_iso_pattern . ')?$/',
                     $text,
                     $attr
                     )) {
