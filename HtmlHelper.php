@@ -84,9 +84,7 @@ class HtmlHelper
 
     public static function time($dt, $content, array $attributes = [])
     {
-        if($dt instanceof \DateTime) {
-            $attr = $dt->format(\DateTime::W3C);
-        } elseif($dt instanceof \DateInterval) {
+        if(is_object($dt)) {
             $attr = DateTimeHelper::iso($dt);
         } else {
             $attr = $dt;

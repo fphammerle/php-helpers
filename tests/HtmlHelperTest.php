@@ -229,6 +229,18 @@ class HtmlHelperTest extends \PHPUnit_Framework_TestCase
                 ['title' => function($i) { return $i->format('%mm'); }],
                 '<time datetime="P1Y0M0DT0H0M15S" title="0m">1y, 15s</time>',
                 ],
+            [
+                \fphammerle\helpers\DateTimeHelper::parse('2012-07-01'),
+                function($p) { return $p->recurrences; },
+                [],
+                '<time datetime="2012-07-01T00:00:00+00:00/P0Y0M1DT0H0M0S">1</time>',
+                ],
+            [
+                new \DatePeriod('R4/2012-07-01T00:00:00Z/P7D'),
+                function($p) { return $p->recurrences; },
+                [],
+                '<time datetime="R4/2012-07-01T00:00:00+00:00/P0Y0M7DT0H0M0S">5</time>',
+                ],
             ];
     }
 

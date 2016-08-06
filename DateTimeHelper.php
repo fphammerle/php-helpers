@@ -145,7 +145,7 @@ class DateTimeHelper
                 // printf("%d. %s\n", $repetitions, $dt->format(\DateTime::ATOM));
             }
             // \DatePeriod::getStartDate() is available from php 5.6.5.
-            $start_iso = $i->start->format(\DateTime::ATOM);
+            $start_iso = self::iso($i->start);
             // \DatePeriod::getDateInterval() is available from php 5.6.5.
             // \DatePeriod::$interval returned an invalid \DatePeriod instance
             // in php 7.0.8
