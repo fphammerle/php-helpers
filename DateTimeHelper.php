@@ -147,14 +147,14 @@ class DateTimeHelper
                 case 0:
                     return sprintf(
                         '%s/%s',
-                        $p->getStartDate()->format(\DateTime::ATOM),
+                        $p->start->format(\DateTime::ATOM),
                         self::intervalToIso($p->getDateInterval())
                         );
                 default:
                     return sprintf(
                         'R%d/%s/%s',
                         $repetitions,
-                        $p->getStartDate()->format(\DateTime::ATOM),
+                        $p->start->format(\DateTime::ATOM),
                         self::intervalToIso($p->getDateInterval())
                         );
             }
