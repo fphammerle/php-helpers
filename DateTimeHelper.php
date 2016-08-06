@@ -48,7 +48,7 @@ class DateTimeHelper
                     $interval = new \DateInterval('P1D');
                 }
                 return new \DatePeriod($start, $interval, 0);
-            } elseif(preg_match('/^\d{4}-(?P<m>\d{2})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
+            } elseif(preg_match('/^\d{4}-(?P<m>\d{2})(( (?=-)| ?(?!-))' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
                 return new \DatePeriod(
                     new \DateTime($text),
                     new \DateInterval('P1M'),

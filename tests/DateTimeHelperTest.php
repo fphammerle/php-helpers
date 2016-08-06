@@ -131,6 +131,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['     '],
             [''],
             ['2016--12'],
+            ['2016-01-08:00'],
             ['2016-10-12 08:20#01'],
             [1],
             [false],
