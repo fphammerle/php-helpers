@@ -317,66 +317,6 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [null, null],
-            ];
-    }
-
-    /**
-     * @dataProvider isoProvider
-     */
-    public function testIso($interval, $iso)
-    {
-        $this->assertSame($iso, DateTimeHelper::iso($interval));
-    }
-
-    public function isoReinitIntervalProvider()
-    {
-        return [
-            [new DI('P1Y')],
-            [new DI('P1M')],
-            [new DI('P1D')],
-            [new DI('PT1H')],
-            [new DI('PT1M')],
-            [new DI('PT1S')],
-            [new DI('P1Y2M3DT4H5M6S')],
-            ];
-    }
-
-    /**
-     * @dataProvider isoReinitIntervalProvider
-     */
-    public function testIsoReinitInterval($interval)
-    {
-        $iso = DateTimeHelper::iso($interval);
-        $this->assertEquals($interval, new DI($iso));
-    }
-
-    public function isoUnsupportedProvider()
-    {
-        return [
-            [DI::createFromDateString('-2 years')],
-            [DI::createFromDateString('-2 months')],
-            [DI::createFromDateString('-2 days')],
-            [DI::createFromDateString('-2 hours')],
-            [DI::createFromDateString('-2 minutes')],
-            [DI::createFromDateString('-2 seconds')],
-            [(new DT('2016-08-03'))->diff(new DT('2016-07-03'))],
-            [(new DT('2016-08-03 10:00:01'))->diff(new DT('2016-08-03 10:00:00'))],
-            ];
-    }
-
-    /**
-     * @dataProvider isoUnsupportedProvider
-     * @expectedException \Exception
-     */
-    public function testIsoUnsupported($interval)
-    {
-        DateTimeHelper::iso($interval);
-    }
-
-    public function periodToIsoProvider()
-    {
-        return [
-            [null, null],
             [
                 new DP(
                     new DT('2016-08-05T14:50:14+08:00'),
@@ -441,10 +381,58 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider periodToIsoProvider
+     * @dataProvider isoProvider
      */
-    public function testPeriodToIso($period, $iso)
+    public function testIso($interval, $iso)
     {
-        $this->assertSame($iso, DateTimeHelper::periodToIso($period));
+        $this->assertSame($iso, DateTimeHelper::iso($interval));
+    }
+
+    public function isoReinitIntervalProvider()
+    {
+        return [
+            [new DI('P1Y')],
+            [new DI('P1M')],
+            [new DI('P1D')],
+            [new DI('PT1H')],
+            [new DI('PT1M')],
+            [new DI('PT1S')],
+            [new DI('P1Y2M3DT4H5M6S')],
+            ];
+    }
+
+    /**
+     * @dataProvider isoReinitIntervalProvider
+     */
+    public function testIsoReinitInterval($interval)
+    {
+        $iso = DateTimeHelper::iso($interval);
+        $this->assertEquals($interval, new DI($iso));
+    }
+
+    public function isoUnsupportedProvider()
+    {
+        return [
+            [DI::createFromDateString('-2 years')],
+            [DI::createFromDateString('-2 months')],
+            [DI::createFromDateString('-2 days')],
+            [DI::createFromDateString('-2 hours')],
+            [DI::createFromDateString('-2 minutes')],
+            [DI::createFromDateString('-2 seconds')],
+            [(new DT('2016-08-03'))->diff(new DT('2016-07-03'))],
+            [(new DT('2016-08-03 10:00:01'))->diff(new DT('2016-08-03 10:00:00'))],
+            [new DP(new DT('2016-08-05'), new DI('P1D'), new DT('2016-08-05'))],
+            [new DP(new DT('2016-08-05'), new DI('PT1S'), new DT('2016-08-04'))],
+            [new \Exception('unsupported class')],
+            ];
+    }
+
+    /**
+     * @dataProvider isoUnsupportedProvider
+     * @expectedException \InvalidArgumentException
+     */
+    public function testIsoUnsupported($interval)
+    {
+        DateTimeHelper::iso($interval);
     }
 }

@@ -104,59 +104,50 @@ class DateTimeHelper
     }
 
     /**
-     * @param \DateInterval|null $i
+     * @param \DateInterval|\DatePeriod|null $i
      * @return string|null
      */
-    public static function iso(\DateInterval $i = null)
+    public static function iso($i)
     {
         if(is_null($i)) {
             return null;
         } elseif(sizeof(get_object_vars($i)) == 0) {
             throw new \InvalidArgumentException(
-                sprintf("given interval is invalid\n%s", print_r($i, true))
+                sprintf("given instance is invalid\n%s", print_r($i, true))
                 );
-        } else {
+        } elseif($i instanceof \DateInterval) {
             $i = self::deinvertInterval($i);
             if($i->y < 0 || $i->m < 0 || $i->d < 0 || $i->h < 0 || $i->i < 0 || $i->s < 0) {
-                throw new \Exception('negative intervals are not supported');
+                throw new \InvalidArgumentException(
+                    sprintf("negative intervals are not supported\n%s", print_r($i, true))
+                    );
             } else {
                 return $i->format('P%yY%mM%dDT%hH%iM%sS');
             }
-        }
-    }
-
-    /**
-     * @param \DatePeriod|null $p
-     * @return string|null
-     */
-    public static function periodToIso(\DatePeriod $p = null)
-    {
-        if(is_null($p)) {
-            return null;
-        } else {
+        } elseif($i instanceof \DatePeriod) {
             // Cave:
             // (new \DatePeriod(
             //      new \DateTime('2016-08-05T14:50:14Z'),
             //      new \DateInterval('P1D'),
             //      -1
             //      )->recurrences == 1
-            if($p->recurrences <= 0) {
+            if($i->recurrences <= 0) {
                 throw new \Exception(
                     'conversion of periods with number of occurances'
                       . ' being negative is not supported'
                     );
             }
             $repetitions = -1;
-            foreach($p as $dt) {
+            foreach($i as $dt) {
                 $repetitions++;
                 // printf("%d. %s\n", $repetitions, $dt->format(\DateTime::ATOM));
             }
             // \DatePeriod::getStartDate() is available from php 5.6.5.
-            $start_iso = $p->start->format(\DateTime::ATOM);
+            $start_iso = $i->start->format(\DateTime::ATOM);
             // \DatePeriod::getDateInterval() is available from php 5.6.5.
             // \DatePeriod::$interval returned an invalid \DatePeriod instance
             // in php 7.0.8
-            $interval_iso = self::iso(get_object_vars($p)['interval']);
+            $interval_iso = self::iso(get_object_vars($i)['interval']);
             switch($repetitions) {
                 case -1:
                     // no valid date within period
@@ -173,6 +164,10 @@ class DateTimeHelper
                 default:
                     return sprintf('R%d/%s/%s', $repetitions, $start_iso, $interval_iso);
             }
+        } else {
+            throw new \InvalidArgumentException(
+                sprintf("expected \\DateInterval or \\DatePeriod\n%s", print_r($i, true))
+                );
         }
     }
 }
