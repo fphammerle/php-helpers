@@ -2,7 +2,10 @@
 
 namespace fphammerle\helpers\tests;
 
-use fphammerle\helpers\DateTimeHelper;
+use \DateInterval as DI;
+use \DatePeriod as DP;
+use \DateTime as DT;
+use \fphammerle\helpers\DateTimeHelper;
 
 class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,11 +13,11 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [null, null],
-            [0, new \DateTime('1970-01-01 00:00:00', new \DateTimeZone('UTC'))],
-            [0, new \DateTime('1970-01-01 01:00:00', new \DateTimeZone('Europe/Vienna'))],
-            [1234567890, new \DateTime('2009-02-13 23:31:30', new \DateTimeZone('UTC'))],
-            [1234567890, new \DateTime('2009-02-14 00:31:30', new \DateTimeZone('Europe/Vienna'))],
-            [-3600, new \DateTime('1970-01-01 00:00:00', new \DateTimeZone('Europe/Vienna'))],
+            [0, new DT('1970-01-01 00:00:00', new \DateTimeZone('UTC'))],
+            [0, new DT('1970-01-01 01:00:00', new \DateTimeZone('Europe/Vienna'))],
+            [1234567890, new DT('2009-02-13 23:31:30', new \DateTimeZone('UTC'))],
+            [1234567890, new DT('2009-02-14 00:31:30', new \DateTimeZone('Europe/Vienna'))],
+            [-3600, new DT('1970-01-01 00:00:00', new \DateTimeZone('Europe/Vienna'))],
             ];
     }
 
@@ -56,77 +59,21 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             [null, 'UTC', null],
             [null, 'US/Pacific', null],
             // date
-            ['2016-08-02', 'UTC', new \DatePeriod(
-                new \DateTime('2016-08-02T00:00:00Z'),
-                new \DateInterval('P1D'),
-                0
-                )],
-            ['2016-08-02', 'Europe/Vienna', new \DatePeriod(
-                new \DateTime('2016-08-02T00:00:00+02:00'),
-                new \DateInterval('P1D'),
-                0
-                )],
-            ['2016-08-02', 'Europe/Vienna', new \DatePeriod(
-                new \DateTime('2016-08-01T22:00:00Z'),
-                new \DateInterval('P1D'),
-                0
-                )],
-            ['2016-08-02+02:00', 'UTC', new \DatePeriod(
-                new \DateTime('2016-08-02T00:00:00+02:00'),
-                new \DateInterval('P1D'),
-                0
-                )],
-            ['2016-08-02+02:00', 'UTC', new \DatePeriod(
-                new \DateTime('2016-08-01T22:00:00Z'),
-                new \DateInterval('P1D'),
-                0
-                )],
+            ['2016-08-02',       'UTC',        new DP(new DT('2016-08-02T00:00:00Z'),      new DI('P1D'), 0)],
+            ['2016-08-02',       'US/Pacific', new DP(new DT('2016-08-02T00:00:00-07:00'), new DI('P1D'), 0)],
+            ['2016-08-02',       'US/Pacific', new DP(new DT('2016-08-02T07:00:00Z'),      new DI('P1D'), 0)],
+            ['2016-08-02+02:00', 'UTC',        new DP(new DT('2016-08-02T00:00:00+02:00'), new DI('P1D'), 0)],
+            ['2016-08-02+02:00', 'UTC',        new DP(new DT('2016-08-01T22:00:00Z'),      new DI('P1D'), 0)],
             // second
-            ['2016-08-02 15:52:13', 'UTC', new \DatePeriod(
-                new \DateTime('2016-08-02T15:52:13Z'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02 15:52:13', 'Europe/Vienna', new \DatePeriod(
-                new \DateTime('2016-08-02T15:52:13+02:00'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02 15:52:13', 'Europe/Vienna', new \DatePeriod(
-                new \DateTime('2016-08-02T13:52:13Z'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02T15:52:13', 'US/Pacific', new \DatePeriod(
-                new \DateTime('2016-08-02T15:52:13-07:00'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02T15:52:13Z', 'US/Pacific', new \DatePeriod(
-                new \DateTime('2016-08-02T15:52:13Z'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02T15:52:13Z', 'Europe/Vienna', new \DatePeriod(
-                new \DateTime('2016-08-02T17:52:13+02:00'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02T15:52:13+00:00', 'Europe/Vienna', new \DatePeriod(
-                new \DateTime('2016-08-02T15:52:13Z'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02T15:52:13+02:00', 'US/Pacific', new \DatePeriod(
-                new \DateTime('2016-08-02T15:52:13+02:00'),
-                new \DateInterval('PT1S'),
-                0
-                )],
-            ['2016-08-02T15:52:13-08:00', 'UTC', new \DatePeriod(
-                new \DateTime('2016-08-02T23:52:13Z'),
-                new \DateInterval('PT1S'),
-                0
-                )],
+            ['2016-08-02 15:52:13',       'UTC',           new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02 15:52:13',       'Europe/Vienna', new DP(new DT('2016-08-02T15:52:13+02:00'), new DI('PT1S'), 0)],
+            ['2016-08-02 15:52:13',       'Europe/Vienna', new DP(new DT('2016-08-02T13:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13',       'US/Pacific',    new DP(new DT('2016-08-02T15:52:13-07:00'), new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13Z',      'US/Pacific',    new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13Z',      'Europe/Vienna', new DP(new DT('2016-08-02T17:52:13+02:00'), new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13+00:00', 'Europe/Vienna', new DP(new DT('2016-08-02T15:52:13Z'),      new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13+02:00', 'US/Pacific',    new DP(new DT('2016-08-02T15:52:13+02:00'), new DI('PT1S'), 0)],
+            ['2016-08-02T15:52:13-08:00', 'UTC',           new DP(new DT('2016-08-02T23:52:13Z'),      new DI('PT1S'), 0)],
             ];
     }
 
@@ -165,13 +112,13 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
         return [
             [null, 'UTC', null],
             [null, 'US/Pacific', null],
-            ['2016-08-02', 'UTC', new \DateTime('2016-08-02T00:00:00Z')],
-            ['2016-08-02', 'Europe/Vienna', new \DateTime('2016-08-02T00:00:00+02:00')],
-            ['2016-08-02', 'Europe/Vienna', new \DateTime('2016-08-01T22:00:00Z')],
-            ['2016-08-02 15:52:13', 'UTC',  new \DateTime('2016-08-02T15:52:13Z')],
-            ['2016-08-02 15:52:13', 'Europe/Vienna',  new \DateTime('2016-08-02T15:52:13+02:00')],
-            ['2016-08-02 15:52:13', 'Europe/Vienna',  new \DateTime('2016-08-02T13:52:13Z')],
-            ['2016-08-02T15:52:13', 'US/Pacific',  new \DateTime('2016-08-02T15:52:13-07:00')],
+            ['2016-08-02', 'UTC', new DT('2016-08-02T00:00:00Z')],
+            ['2016-08-02', 'Europe/Vienna', new DT('2016-08-02T00:00:00+02:00')],
+            ['2016-08-02', 'Europe/Vienna', new DT('2016-08-01T22:00:00Z')],
+            ['2016-08-02 15:52:13', 'UTC',  new DT('2016-08-02T15:52:13Z')],
+            ['2016-08-02 15:52:13', 'Europe/Vienna',  new DT('2016-08-02T15:52:13+02:00')],
+            ['2016-08-02 15:52:13', 'Europe/Vienna',  new DT('2016-08-02T13:52:13Z')],
+            ['2016-08-02T15:52:13', 'US/Pacific',  new DT('2016-08-02T15:52:13-07:00')],
             ];
     }
 
@@ -209,63 +156,63 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                \DateInterval::createFromDateString('-2 years'),
+                DI::createFromDateString('-2 years'),
                 ['y' => -2, 'm' => 0, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                \DateInterval::createFromDateString('-2 months'),
+                DI::createFromDateString('-2 months'),
                 ['y' => 0, 'm' => -2, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                \DateInterval::createFromDateString('-2 days'),
+                DI::createFromDateString('-2 days'),
                 ['y' => 0, 'm' => 0, 'd' => -2, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                \DateInterval::createFromDateString('-2 hours'),
+                DI::createFromDateString('-2 hours'),
                 ['y' => 0, 'm' => 0, 'd' => 0, 'h' => -2, 'i' => 0, 's' => 0],
                 ],
             [
-                \DateInterval::createFromDateString('-2 minutes'),
+                DI::createFromDateString('-2 minutes'),
                 ['y' => 0, 'm' => 0, 'd' => 0, 'h' => 0, 'i' => -2, 's' => 0],
                 ],
             [
-                \DateInterval::createFromDateString('-2 seconds'),
+                DI::createFromDateString('-2 seconds'),
                 ['y' => 0, 'm' => 0, 'd' => 0, 'h' => 0, 'i' => 0, 's' => -2],
                 ],
             [
-                (new \DateTime('2016-08'))->diff(new \DateTime('2016-07')),
+                (new DT('2016-08'))->diff(new DT('2016-07')),
                 ['y' => 0, 'm' => -1, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-08-03'))->diff(new \DateTime('2016-07-03')),
+                (new DT('2016-08-03'))->diff(new DT('2016-07-03')),
                 ['y' => 0, 'm' => -1, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-07-03'))->diff(new \DateTime('2016-08-03')),
+                (new DT('2016-07-03'))->diff(new DT('2016-08-03')),
                 ['y' => 0, 'm' => 1, 'd' => 0, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-08-04'))->diff(new \DateTime('2016-07-03')),
+                (new DT('2016-08-04'))->diff(new DT('2016-07-03')),
                 ['y' => 0, 'm' => -1, 'd' => -1, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-07-03'))->diff(new \DateTime('2016-08-04')),
+                (new DT('2016-07-03'))->diff(new DT('2016-08-04')),
                 ['y' => 0, 'm' => 1, 'd' => 1, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-08-02'))->diff(new \DateTime('2016-07-03')),
+                (new DT('2016-08-02'))->diff(new DT('2016-07-03')),
                 ['y' => 0, 'm' => 0, 'd' => -30, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-07-03'))->diff(new \DateTime('2016-08-02')),
+                (new DT('2016-07-03'))->diff(new DT('2016-08-02')),
                 ['y' => 0, 'm' => 0, 'd' => 30, 'h' => 0, 'i' => 0, 's' => 0],
                 ],
             [
-                (new \DateTime('2016-08-04 18:10:02'))->diff(new \DateTime('2016-07-03 14:13:03')),
+                (new DT('2016-08-04 18:10:02'))->diff(new DT('2016-07-03 14:13:03')),
                 ['y' => 0, 'm' => -1, 'd' => -1, 'h' => -3, 'i' => -56, 's' => -59],
                 ],
             [
-                (new \DateTime('2016-07-03 14:13:03'))->diff(new \DateTime('2016-08-04 18:10:02')),
+                (new DT('2016-07-03 14:13:03'))->diff(new DT('2016-08-04 18:10:02')),
                 ['y' => 0, 'm' => 1, 'd' => 1, 'h' => 3, 'i' => 56, 's' => 59],
                 ],
             ];
@@ -305,13 +252,13 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     public function intervalToIsoReinitProvider()
     {
         return [
-            [new \DateInterval('P1Y')],
-            [new \DateInterval('P1M')],
-            [new \DateInterval('P1D')],
-            [new \DateInterval('PT1H')],
-            [new \DateInterval('PT1M')],
-            [new \DateInterval('PT1S')],
-            [new \DateInterval('P1Y2M3DT4H5M6S')],
+            [new DI('P1Y')],
+            [new DI('P1M')],
+            [new DI('P1D')],
+            [new DI('PT1H')],
+            [new DI('PT1M')],
+            [new DI('PT1S')],
+            [new DI('P1Y2M3DT4H5M6S')],
             ];
     }
 
@@ -321,20 +268,20 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     public function testIntervalToIsoReinit($interval)
     {
         $iso = DateTimeHelper::intervalToIso($interval);
-        $this->assertEquals($interval, new \DateInterval($iso));
+        $this->assertEquals($interval, new DI($iso));
     }
 
     public function intervalToIsoReinitUnsupportedProvider()
     {
         return [
-            [\DateInterval::createFromDateString('-2 years')],
-            [\DateInterval::createFromDateString('-2 months')],
-            [\DateInterval::createFromDateString('-2 days')],
-            [\DateInterval::createFromDateString('-2 hours')],
-            [\DateInterval::createFromDateString('-2 minutes')],
-            [\DateInterval::createFromDateString('-2 seconds')],
-            [(new \DateTime('2016-08-03'))->diff(new \DateTime('2016-07-03'))],
-            [(new \DateTime('2016-08-03 10:00:01'))->diff(new \DateTime('2016-08-03 10:00:00'))],
+            [DI::createFromDateString('-2 years')],
+            [DI::createFromDateString('-2 months')],
+            [DI::createFromDateString('-2 days')],
+            [DI::createFromDateString('-2 hours')],
+            [DI::createFromDateString('-2 minutes')],
+            [DI::createFromDateString('-2 seconds')],
+            [(new DT('2016-08-03'))->diff(new DT('2016-07-03'))],
+            [(new DT('2016-08-03 10:00:01'))->diff(new DT('2016-08-03 10:00:00'))],
             ];
     }
 
@@ -352,51 +299,51 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
         return [
             [null, null],
             [
-                new \DatePeriod(
-                    new \DateTime('2016-08-05T14:50:14+08:00'),
-                    new \DateInterval('P1D'),
-                    new \DateTime('2016-08-10T14:50:14+08:00')
+                new DP(
+                    new DT('2016-08-05T14:50:14+08:00'),
+                    new DI('P1D'),
+                    new DT('2016-08-10T14:50:14+08:00')
                     ),
                 'R4/2016-08-05T14:50:14+08:00/P0Y0M1DT0H0M0S',
                 ],
             [
-                new \DatePeriod(
-                    new \DateTime('2016-08-05T14:50:14+08:00'),
-                    new \DateInterval('P5D'),
-                    new \DateTime('2016-08-10T14:50:14+08:00')
+                new DP(
+                    new DT('2016-08-05T14:50:14+08:00'),
+                    new DI('P5D'),
+                    new DT('2016-08-10T14:50:14+08:00')
                     ),
                 '2016-08-05T14:50:14+08:00/P0Y0M5DT0H0M0S',
                 ],
             [
-                new \DatePeriod(
-                    new \DateTime('2016-08-05T14:50:14+08:00'),
-                    new \DateInterval('P1Y2M3DT4H5M6S'),
-                    new \DateTime('2017-10-08T18:55:20+08:00')
+                new DP(
+                    new DT('2016-08-05T14:50:14+08:00'),
+                    new DI('P1Y2M3DT4H5M6S'),
+                    new DT('2017-10-08T18:55:20+08:00')
                     ),
                 '2016-08-05T14:50:14+08:00/P1Y2M3DT4H5M6S',
                 ],
             [
-                new \DatePeriod(
-                    new \DateTime('2016-08-05T14:50:14Z'),
-                    new \DateInterval('P1D'),
+                new DP(
+                    new DT('2016-08-05T14:50:14Z'),
+                    new DI('P1D'),
                     0
                     ),
                 '2016-08-05T14:50:14+00:00/P0Y0M1DT0H0M0S',
                 ],
             [
-                new \DatePeriod(
-                    new \DateTime('2016-08-05T14:50:14Z'),
-                    new \DateInterval('PT5M'),
+                new DP(
+                    new DT('2016-08-05T14:50:14Z'),
+                    new DI('PT5M'),
                     3
                     ),
                 'R3/2016-08-05T14:50:14+00:00/P0Y0M0DT0H5M0S',
                 ],
             [
-                new \DatePeriod('R3/2016-08-05T14:50:14Z/PT5M'),
+                new DP('R3/2016-08-05T14:50:14Z/PT5M'),
                 'R3/2016-08-05T14:50:14+00:00/P0Y0M0DT0H5M0S',
                 ],
             [
-                new \DatePeriod('R4/2016-08-05T14:50:14Z/P1Y2M3DT4H5M6S'),
+                new DP('R4/2016-08-05T14:50:14Z/P1Y2M3DT4H5M6S'),
                 'R4/2016-08-05T14:50:14+00:00/P1Y2M3DT4H5M6S',
                 ],
             [
