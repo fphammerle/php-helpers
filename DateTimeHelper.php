@@ -114,7 +114,9 @@ class DateTimeHelper
         } elseif(sizeof(get_object_vars($i)) == 0) {
             throw new \InvalidArgumentException(
                 sprintf("given instance is invalid\n%s", print_r($i, true))
-                );
+            );
+        } elseif($i instanceof \DateTime) {
+            return $i->format(\DateTime::ATOM);
         } elseif($i instanceof \DateInterval) {
             $i = self::deinvertInterval($i);
             if($i->y < 0 || $i->m < 0 || $i->d < 0 || $i->h < 0 || $i->i < 0 || $i->s < 0) {
@@ -165,9 +167,10 @@ class DateTimeHelper
                     return sprintf('R%d/%s/%s', $repetitions, $start_iso, $interval_iso);
             }
         } else {
-            throw new \InvalidArgumentException(
-                sprintf("expected \\DateInterval or \\DatePeriod\n%s", print_r($i, true))
-                );
+            throw new \InvalidArgumentException(sprintf(
+                "expected \\DateTime, \\DateInterval or \\DatePeriod\n%s", 
+                print_r($i, true)
+                ));
         }
     }
 }

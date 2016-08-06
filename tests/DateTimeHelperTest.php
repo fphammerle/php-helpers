@@ -317,6 +317,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [null, null],
+            [new DT('2016-09-16 21:13+02:00'), '2016-09-16T21:13:00+02:00'],
             [
                 new DP(
                     new DT('2016-08-05T14:50:14+08:00'),
@@ -386,6 +387,27 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
     public function testIso($interval, $iso)
     {
         $this->assertSame($iso, DateTimeHelper::iso($interval));
+    }
+
+    public function isoReinitDateTimeProvider()
+    {
+        return [
+            [new DT('2016-09-16')],
+            [new DT('2016-09-16 +02:00')],
+            [new DT('2016-09-16 -07:13')],
+            [new DT('2016-09-16 21:13')],
+            [new DT('2016-09-16 21:13+02:00')],
+            [new DT('2016-09-16 14:13-07:00')],
+            ];
+    }
+
+    /**
+     * @dataProvider isoReinitDateTimeProvider
+     */
+    public function testIsoReinitDateTime($dt)
+    {
+        $iso = DateTimeHelper::iso($dt);
+        $this->assertEquals($dt, new DT($iso));
     }
 
     public function isoReinitIntervalProvider()
