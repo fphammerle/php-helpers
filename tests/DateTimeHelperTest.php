@@ -430,7 +430,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($iso, DateTimeHelper::iso($interval));
     }
 
-    public function isoReinitDateTimeProvider()
+    public function isoReinitProvider()
     {
         return [
             [new DT('2016-09-16')],
@@ -439,38 +439,25 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             [new DT('2016-09-16 21:13')],
             [new DT('2016-09-16 21:13+02:00')],
             [new DT('2016-09-16 14:13-07:00')],
-            ];
-    }
-
-    /**
-     * @dataProvider isoReinitDateTimeProvider
-     */
-    public function testIsoReinitDateTime($dt)
-    {
-        $iso = DateTimeHelper::iso($dt);
-        $this->assertEquals($dt, new DT($iso));
-    }
-
-    public function isoReinitIntervalProvider()
-    {
-        return [
             [new DI('P1Y')],
             [new DI('P1M')],
             [new DI('P1D')],
             [new DI('PT1H')],
             [new DI('PT1M')],
             [new DI('PT1S')],
+            [new DI('P3DT1S')],
             [new DI('P1Y2M3DT4H5M6S')],
             ];
     }
 
     /**
-     * @dataProvider isoReinitIntervalProvider
+     * @dataProvider isoReinitProvider
      */
-    public function testIsoReinitInterval($interval)
+    public function testIsoReinit($obj)
     {
-        $iso = DateTimeHelper::iso($interval);
-        $this->assertEquals($interval, new DI($iso));
+        $iso = DateTimeHelper::iso($obj);
+        $class = get_class($obj);
+        $this->assertEquals($obj, new $class($iso));
     }
 
     public function isoUnsupportedProvider()
