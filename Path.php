@@ -40,9 +40,9 @@ class Path
      */
     public function getBasename()
     {
-        return StringHelper::implode('', [
+        return StringHelper::unite([
             $this->_filename,
-            isset($this->_extension) ? ('.' . $this->_extension) : null,
+            StringHelper::prepend('.', $this->_extension),
             ]);
     }
 

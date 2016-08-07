@@ -253,6 +253,32 @@ class StringHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, StringHelper::implode($glue, $pieces));
     }
 
+    public function uniteProvider()
+    {
+        return [
+            [['a', 'b', 'c', 'd'], 'abcd'],
+            [['a', 'b', '', 'd'], 'abd'],
+            [['a', 'b', null, 'd'], 'abd'],
+            [['a', 3, 'c', 'd'], 'a3cd'],
+            [[null, 'b', 'c', 'd'], 'bcd'],
+            [[2 => 'c'], 'c'],
+            [[2 => 'c', 0 => 'a'], 'ca'],
+            [[2 => 'c', 0 => 'a'], implode('', [3 => 'c', 0 => 'a'])],
+            [[2 => 'c', 0 => 'a', 1 => 'b'], 'cab'],
+            [[2 => 'c', 0 => 'a', 1 => 'b'], implode('', [2 => 'c', 0 => 'a', 1 => 'b'])],
+            [[null, null, null], null],
+            [null, null],
+            ];
+    }
+
+    /**
+     * @dataProvider uniteProvider
+     */
+    public function testUnite($pieces, $expected)
+    {
+        $this->assertSame($expected, StringHelper::unite($pieces));
+    }
+
     public function containsAnyProvider()
     {
         return [

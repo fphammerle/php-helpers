@@ -124,11 +124,11 @@ class DateTimeHelper
                     sprintf("negative intervals are not supported\n%s", print_r($i, true))
                     );
             } else {
-                return StringHelper::prepend('P', StringHelper::implode('', [
+                return StringHelper::prepend('P', StringHelper::unite([
                     StringHelper::append($i->y ?: null, 'Y'),
                     StringHelper::append($i->m ?: null, 'M'),
                     StringHelper::append($i->d ?: null, 'D'),
-                    StringHelper::prepend('T', StringHelper::implode('', [
+                    StringHelper::prepend('T', StringHelper::unite([
                         StringHelper::append($i->h ?: null, 'H'),
                         StringHelper::append($i->i ?: null, 'M'),
                         StringHelper::append($i->s ?: null, 'S'),

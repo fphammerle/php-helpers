@@ -73,6 +73,14 @@ class StringHelper
     }
 
     /**
+     * @return string|null
+     */
+    public static function unite(array $pieces = null)
+    {
+        return self::implode('', $pieces);
+    }
+
+    /**
      * @throws InvalidArgumentException empty needle
      * @param array $needles
      * @param string $haystack
