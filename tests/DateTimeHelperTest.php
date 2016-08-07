@@ -318,13 +318,54 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
         return [
             [null, null],
             [new DT('2016-09-16 21:13+02:00'), '2016-09-16T21:13:00+02:00'],
+            // \DateInterval::__construct() does not support negative specifiers.
+            // e.g. 'P-1Y'
+            // 0 years
+            [new DI('P0Y0M0DT0H0M0S'), 'P0S'           ],
+            [new DI('P0Y0M0DT0H0M6S'), 'PT6S'          ],
+            [new DI('P0Y0M0DT0H5M0S'), 'PT5M'          ],
+            [new DI('P0Y0M0DT0H5M6S'), 'PT5M6S'        ],
+            [new DI('P0Y0M0DT4H0M0S'), 'PT4H'          ],
+            [new DI('P0Y0M3DT0H0M0S'), 'P3D'           ],
+            [new DI('P0Y0M3DT0H0M6S'), 'P3DT6S'        ],
+            [new DI('P0Y0M3DT4H5M6S'), 'P3DT4H5M6S'    ],
+            [new DI('P0Y2M0DT0H0M0S'), 'P2M'           ],
+            [new DI('P0Y2M0DT0H0M6S'), 'P2MT6S'        ],
+            [new DI('P0Y2M3DT0H0M6S'), 'P2M3DT6S'      ],
+            // >0 years, 0 months
+            [new DI('P1Y0M0DT0H0M0S'), 'P1Y'           ],
+            [new DI('P1Y0M0DT0H0M6S'), 'P1YT6S'        ],
+            [new DI('P1Y0M0DT0H5M0S'), 'P1YT5M'        ],
+            [new DI('P1Y0M0DT0H5M6S'), 'P1YT5M6S'      ],
+            [new DI('P1Y0M0DT4H0M0S'), 'P1YT4H'        ],
+            [new DI('P1Y0M3DT0H0M0S'), 'P1Y3D'         ],
+            [new DI('P1Y0M3DT0H0M6S'), 'P1Y3DT6S'      ],
+            [new DI('P1Y0M3DT4H5M6S'), 'P1Y3DT4H5M6S'  ],
+            // >0 years, >0 months, 0 days (complete)
+            [new DI('P1Y2M0DT0H0M0S'), 'P1Y2M'         ],
+            [new DI('P1Y2M0DT0H0M6S'), 'P1Y2MT6S'      ],
+            [new DI('P1Y2M0DT0H5M0S'), 'P1Y2MT5M'      ],
+            [new DI('P1Y2M0DT0H5M6S'), 'P1Y2MT5M6S'    ],
+            [new DI('P1Y2M0DT4H0M0S'), 'P1Y2MT4H'      ],
+            [new DI('P1Y2M0DT4H0M6S'), 'P1Y2MT4H6S'    ],
+            [new DI('P1Y2M0DT4H5M0S'), 'P1Y2MT4H5M'    ],
+            [new DI('P1Y2M0DT4H5M6S'), 'P1Y2MT4H5M6S'  ],
+            // >0 years, >0 months, >0 days (complete)
+            [new DI('P1Y2M3DT0H0M0S'), 'P1Y2M3D'       ],
+            [new DI('P1Y2M3DT0H0M6S'), 'P1Y2M3DT6S'    ],
+            [new DI('P1Y2M3DT0H5M0S'), 'P1Y2M3DT5M'    ],
+            [new DI('P1Y2M3DT0H5M6S'), 'P1Y2M3DT5M6S'  ],
+            [new DI('P1Y2M3DT4H0M0S'), 'P1Y2M3DT4H'    ],
+            [new DI('P1Y2M3DT4H0M6S'), 'P1Y2M3DT4H6S'  ],
+            [new DI('P1Y2M3DT4H5M0S'), 'P1Y2M3DT4H5M'  ],
+            [new DI('P1Y2M3DT4H5M6S'), 'P1Y2M3DT4H5M6S'],
             [
                 new DP(
                     new DT('2016-08-05T14:50:14+08:00'),
                     new DI('P1D'),
                     new DT('2016-08-10T14:50:14+08:00')
                     ),
-                'R4/2016-08-05T14:50:14+08:00/P0Y0M1DT0H0M0S',
+                'R4/2016-08-05T14:50:14+08:00/P1D',
                 ],
             [
                 new DP(
@@ -332,7 +373,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
                     new DI('P5D'),
                     new DT('2016-08-10T14:50:14+08:00')
                     ),
-                '2016-08-05T14:50:14+08:00/P0Y0M5DT0H0M0S',
+                '2016-08-05T14:50:14+08:00/P5D',
                 ],
             [
                 new DP(
@@ -348,7 +389,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
                     new DI('P1D'),
                     0
                     ),
-                '2016-08-05T14:50:14+00:00/P0Y0M1DT0H0M0S',
+                '2016-08-05T14:50:14+00:00/P1D',
                 ],
             [
                 new DP(
@@ -356,11 +397,11 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
                     new DI('PT5M'),
                     3
                     ),
-                'R3/2016-08-05T14:50:14+00:00/P0Y0M0DT0H5M0S',
+                'R3/2016-08-05T14:50:14+00:00/PT5M',
                 ],
             [
                 new DP('R3/2016-08-05T14:50:14Z/PT5M'),
-                'R3/2016-08-05T14:50:14+00:00/P0Y0M0DT0H5M0S',
+                'R3/2016-08-05T14:50:14+00:00/PT5M',
                 ],
             [
                 new DP('R4/2016-08-05T14:50:14Z/P1Y2M3DT4H5M6S'),
@@ -368,15 +409,15 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
                 ],
             [
                 DateTimeHelper::parse('2016-08-05T14:50:14Z'),
-                '2016-08-05T14:50:14+00:00/P0Y0M0DT0H0M1S',
+                '2016-08-05T14:50:14+00:00/PT1S',
                 ],
             [
                 DateTimeHelper::parse('2016-08-05Z'),
-                '2016-08-05T00:00:00+00:00/P0Y0M1DT0H0M0S',
+                '2016-08-05T00:00:00+00:00/P1D',
                 ],
             [
                 DateTimeHelper::parse('2016-08-05-03:00'),
-                '2016-08-05T00:00:00-03:00/P0Y0M1DT0H0M0S',
+                '2016-08-05T00:00:00-03:00/P1D',
                 ],
             ];
     }

@@ -124,7 +124,16 @@ class DateTimeHelper
                     sprintf("negative intervals are not supported\n%s", print_r($i, true))
                     );
             } else {
-                return $i->format('P%yY%mM%dDT%hH%iM%sS');
+                return StringHelper::prepend('P', StringHelper::implode('', [
+                    StringHelper::append($i->y ?: null, 'Y'),
+                    StringHelper::append($i->m ?: null, 'M'),
+                    StringHelper::append($i->d ?: null, 'D'),
+                    StringHelper::prepend('T', StringHelper::implode('', [
+                        StringHelper::append($i->h ?: null, 'H'),
+                        StringHelper::append($i->i ?: null, 'M'),
+                        StringHelper::append($i->s ?: null, 'S'),
+                        ])),
+                    ])) ?: 'P0S';
             }
         } elseif($i instanceof \DatePeriod) {
             // Cave:
