@@ -5,6 +5,7 @@ namespace fphammerle\helpers;
 class DateTimeHelper
 {
     const ISO8601_DATE_FORMAT = 'Y-m-d';
+    const ISO8601_TIME_FORMAT = 'H:i:s';
 
     const _timezone_iso_pattern = '(?P<tz>Z|[\+-]\d{2}.\d{2})';
 

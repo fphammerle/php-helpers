@@ -27,6 +27,24 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected_date, $date);
     }
 
+    public function iso6801TimeFormatProvider()
+    {
+        return [
+            [0, '00:00:00'],
+            [1456707723, '01:02:03'],
+            [1479202824, '09:40:24'],
+            ];
+    }
+
+    /**
+     * @dataProvider iso6801TimeFormatProvider
+     */
+    public function testIso6801TimeFormat($timestamp, $expected_time)
+    {
+        $time = date(DateTimeHelper::ISO8601_TIME_FORMAT, $timestamp);
+        $this->assertEquals($expected_time, $time);
+    }
+
     public function timestampToDateTimeProvider()
     {
         return [
