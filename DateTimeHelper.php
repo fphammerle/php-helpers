@@ -4,6 +4,8 @@ namespace fphammerle\helpers;
 
 class DateTimeHelper
 {
+    const ISO8601_DATE_FORMAT = 'Y-m-d';
+
     const _timezone_iso_pattern = '(?P<tz>Z|[\+-]\d{2}.\d{2})';
 
     /**
@@ -177,7 +179,7 @@ class DateTimeHelper
             }
         } else {
             throw new \InvalidArgumentException(sprintf(
-                "expected \\DateTime, \\DateInterval or \\DatePeriod\n%s", 
+                "expected \\DateTime, \\DateInterval or \\DatePeriod\n%s",
                 print_r($i, true)
                 ));
         }

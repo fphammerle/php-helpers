@@ -9,6 +9,24 @@ use \fphammerle\helpers\DateTimeHelper;
 
 class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
 {
+    public function iso6801DateFormatProvider()
+    {
+        return [
+            [0, '1970-01-01'],
+            [1456704000, '2016-02-29'],
+            [1479202824, '2016-11-15'],
+            ];
+    }
+
+    /**
+     * @dataProvider iso6801DateFormatProvider
+     */
+    public function testIso6801DateFormat($timestamp, $expected_date)
+    {
+        $date = date(DateTimeHelper::ISO8601_DATE_FORMAT, $timestamp);
+        $this->assertEquals($expected_date, $date);
+    }
+
     public function timestampToDateTimeProvider()
     {
         return [
