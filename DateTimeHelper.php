@@ -28,7 +28,7 @@ class DateTimeHelper
 
     /**
      * @param string|null $text
-     * @return \DatePeriod|null
+     * @return \DatePeriod|\DateInterval|null
      */
     public static function parse($text)
     {
