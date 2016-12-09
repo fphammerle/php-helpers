@@ -149,6 +149,18 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016-01-02T15:52:13+00:00', 'Europe/Vienna', new DP(new DT('2016-01-02T15:52:13Z'),      new DI('PT1S'), 0)],
             ['2016-01-02T15:52:13+02:00', 'US/Pacific',    new DP(new DT('2016-01-02T15:52:13+02:00'), new DI('PT1S'), 0)],
             ['2016-01-02T15:52:13-08:00', 'UTC',           new DP(new DT('2016-01-02T15:52:13-08:00'), new DI('PT1S'), 0)],
+            // durations PnYnMnDTnHnMnS
+            ['P1Y', 'UTC', new DI('P1Y')],
+            ['P3M', 'UTC', new DI('P3M')],
+            ['P5D', 'UTC', new DI('P5D')],
+            ['PT9H', 'UTC', new DI('PT9H')],
+            ['PT7M', 'US/Pacific', new DI('PT7M')],
+            ['PT6S', 'UTC', new DI('PT6S')],
+            ['P1Y3M5D', 'UTC', new DI('P1Y3M5D')],
+            ['PT9H7M6S', 'Europe/Vienna', new DI('PT9H7M6S')],
+            ['P1Y3M5DT9H7M6S', 'UTC', new DI('P1Y3M5DT9H7M6S')],
+            // durations PnW
+            ['P4W', 'UTC', new DI('P4W')],
             ];
     }
 
@@ -169,6 +181,8 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016--12'],
             ['2016-01-08:00'],
             ['2016-10-12 08:20#01'],
+            ['P'],
+            ['PT1'],
             [1],
             [false],
             ];
@@ -253,6 +267,7 @@ class DateTimeHelperTest extends \PHPUnit_Framework_TestCase
             ['2016--12'],
             ['2016-01-08:00'],
             ['2016-10-12 08:20#01'],
+            ['P1Y'],
             [1],
             [false],
             ];

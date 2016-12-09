@@ -34,40 +34,42 @@ class DateTimeHelper
     {
         if($text === null) {
             return null;
-        } else {
-            if(preg_match(
-                    '/^(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})'
-                        .'([ T](?P<h>\d{2}):(?P<i>\d{2})(:(?P<s>\d{2}))?)?'
-                        . '(' . self::_timezone_iso_pattern . ')?$/',
-                    $text,
-                    $attr
-                    )) {
-                $start = new \DateTime($text);
-                if(!empty($attr['s'])) {
-                    $interval = new \DateInterval('PT1S');
-                } elseif(!empty($attr['i'])) {
-                    $interval = new \DateInterval('PT1M');
-                } else {
-                    $interval = new \DateInterval('P1D');
-                }
-                return new \DatePeriod($start, $interval, 0);
-            } elseif(preg_match('/^\d{4}-(?P<m>\d{2})(( (?=-)| ?(?!-))' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
-                return new \DatePeriod(
-                    new \DateTime($text),
-                    new \DateInterval('P1M'),
-                    0
-                    );
-            } elseif(preg_match('/^(?P<y>\d{4})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
-                return new \DatePeriod(
-                    new \DateTime(sprintf(
-                        '%s-01-01 %s',
-                        $attr['y'],
-                        isset($attr['tz']) ? $attr['tz'] : ''
-                        )),
-                    new \DateInterval('P1Y'),
-                    0
-                    );
+        } elseif(preg_match(
+                '/^(?P<y>\d{4})-(?P<m>\d{2})-(?P<d>\d{2})'
+                    .'([ T](?P<h>\d{2}):(?P<i>\d{2})(:(?P<s>\d{2}))?)?'
+                    . '(' . self::_timezone_iso_pattern . ')?$/',
+                $text,
+                $attr
+                )) {
+            $start = new \DateTime($text);
+            if(!empty($attr['s'])) {
+                $interval = new \DateInterval('PT1S');
+            } elseif(!empty($attr['i'])) {
+                $interval = new \DateInterval('PT1M');
             } else {
+                $interval = new \DateInterval('P1D');
+            }
+            return new \DatePeriod($start, $interval, 0);
+        } elseif(preg_match('/^\d{4}-(?P<m>\d{2})(( (?=-)| ?(?!-))' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
+            return new \DatePeriod(
+                new \DateTime($text),
+                new \DateInterval('P1M'),
+                0
+                );
+        } elseif(preg_match('/^(?P<y>\d{4})( ?' . self::_timezone_iso_pattern . ')?$/', $text, $attr)) {
+            return new \DatePeriod(
+                new \DateTime(sprintf(
+                    '%s-01-01 %s',
+                    $attr['y'],
+                    isset($attr['tz']) ? $attr['tz'] : ''
+                    )),
+                new \DateInterval('P1Y'),
+                0
+                );
+        } else {
+            try {
+                return new \DateInterval($text);
+            } catch(\Exception $ex) {
                 throw new \InvalidArgumentException(
                     sprintf("could not parse string '%s'", $text)
                     );
@@ -82,6 +84,11 @@ class DateTimeHelper
     public static function parseGetStart($text)
     {
         $period = self::parse($text);
+        if($period instanceof \DateInterval) {
+            throw new \InvalidArgumentException(
+                sprintf("'%s' defines a duration and does not provide any start date", $text)
+            );
+        }
         if($period) {
             return $period->start;
         } else {
